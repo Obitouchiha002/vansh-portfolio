@@ -3,6 +3,12 @@ import { GraduationCap, Calendar } from 'lucide-react';
 
 const educationData = [
   {
+    institution: 'Delhi University (SOL)',
+    degree: 'B.Com (Honours) - 4th Semester',
+    year: 'Present',
+    percentage: 'Pursuing',
+  },
+  {
     institution: 'Industrial Training Institute (ITI) – Mangolpuri',
     degree: 'NCVT',
     year: '2025',

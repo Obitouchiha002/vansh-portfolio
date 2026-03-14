@@ -1,5 +1,9 @@
 import { motion } from 'motion/react';
 import { ExternalLink, Play, Image as ImageIcon, Code, PenTool } from 'lucide-react';
+import { useState } from 'react';
+import ThumbnailsGallery from './ThumbnailsGallery';
+import GameTestingGallery from './GameTestingGallery';
+import GamingSolutionsGallery from './GamingSolutionsGallery';
 
 const projects = [
   {
@@ -8,6 +12,7 @@ const projects = [
     icon: ImageIcon,
     image: '/Youtube Thumanils.png',
     description: 'Eye-catching and high-CTR thumbnails designed for tech and gaming videos.',
+    isGallery: true,
   },
   {
     title: 'Game Testing Videos',
@@ -15,6 +20,7 @@ const projects = [
     icon: Play,
     image: '/Game Testing videos.png',
     description: 'Engaging, well-paced game testing videos with clear performance analysis and visual aids.',
+    isGameGallery: true,
   },
   {
     title: 'Gaming Solutions Videos',
@@ -22,6 +28,7 @@ const projects = [
     icon: PenTool,
     image: '/gaming solution vidoes.png',
     description: 'Comprehensive videos providing gaming solutions, bug fixes, and performance optimization.',
+    isGamingSolutionsGallery: true,
   },
   {
     title: 'My Resume',
@@ -29,11 +36,15 @@ const projects = [
     icon: Code,
     image: '/My Resume.png',
     description: 'A comprehensive overview of my skills, education, and certifications in IT Support and Tech.',
-    link: '/Vansh_Kashyap_Resume.pdf',
+    link: '/resume',
   },
 ];
 
 export default function Projects() {
+  const [isGalleryOpen, setIsGalleryOpen] = useState(false);
+  const [isGameGalleryOpen, setIsGameGalleryOpen] = useState(false);
+  const [isGamingSolutionsGalleryOpen, setIsGamingSolutionsGalleryOpen] = useState(false);
+
   return (
     <section id="projects" className="py-24 relative">
       <div className="max-w-7xl mx-auto px-6">
@@ -89,6 +100,27 @@ export default function Projects() {
                   >
                     View Project <ExternalLink size={16} />
                   </a>
+                ) : project.isGallery ? (
+                  <button 
+                    onClick={() => setIsGalleryOpen(true)}
+                    className="text-sm font-medium text-zinc-300 hover:text-neon-green flex items-center gap-2 transition-colors"
+                  >
+                    View Gallery <ExternalLink size={16} />
+                  </button>
+                ) : project.isGameGallery ? (
+                  <button 
+                    onClick={() => setIsGameGalleryOpen(true)}
+                    className="text-sm font-medium text-zinc-300 hover:text-neon-green flex items-center gap-2 transition-colors"
+                  >
+                    View Gallery <ExternalLink size={16} />
+                  </button>
+                ) : project.isGamingSolutionsGallery ? (
+                  <button 
+                    onClick={() => setIsGamingSolutionsGalleryOpen(true)}
+                    className="text-sm font-medium text-zinc-300 hover:text-neon-green flex items-center gap-2 transition-colors"
+                  >
+                    View Gallery <ExternalLink size={16} />
+                  </button>
                 ) : (
                   <button className="text-sm font-medium text-zinc-300 hover:text-neon-green flex items-center gap-2 transition-colors">
                     View Project <ExternalLink size={16} />
@@ -99,6 +131,19 @@ export default function Projects() {
           ))}
         </div>
       </div>
+
+      <ThumbnailsGallery 
+        isOpen={isGalleryOpen} 
+        onClose={() => setIsGalleryOpen(false)} 
+      />
+      <GameTestingGallery 
+        isOpen={isGameGalleryOpen} 
+        onClose={() => setIsGameGalleryOpen(false)} 
+      />
+      <GamingSolutionsGallery 
+        isOpen={isGamingSolutionsGalleryOpen} 
+        onClose={() => setIsGamingSolutionsGalleryOpen(false)} 
+      />
     </section>
   );
 }

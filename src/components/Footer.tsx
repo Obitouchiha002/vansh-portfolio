@@ -1,4 +1,4 @@
-import { ArrowUp, Download } from 'lucide-react';
+import { ArrowUp } from 'lucide-react';
 
 export default function Footer() {
   const scrollToTop = () => {
@@ -23,14 +23,6 @@ export default function Footer() {
         </p>
         
         <div className="flex items-center gap-4">
-          <a 
-            href="/api/download-source"
-            className="flex items-center gap-2 px-4 py-2 rounded-full bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-neon-green hover:border-neon-green/50 transition-colors text-sm font-medium"
-            title="Download Source Code (ZIP)"
-          >
-            <Download size={16} />
-            <span>Download Code</span>
-          </a>
           <button 
             onClick={scrollToTop}
             className="w-10 h-10 rounded-full bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-400 hover:text-neon-green hover:border-neon-green/50 transition-colors"

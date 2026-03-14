@@ -14,6 +14,7 @@ const navItems = [
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const isHomePage = window.location.pathname === '/';
 
   useEffect(() => {
     const handleScroll = () => {
@@ -23,6 +24,10 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  const getHref = (href: string) => {
+    return isHomePage ? href : `/${href}`;
+  };
+
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
@@ -30,7 +35,7 @@ export default function Navbar() {
       }`}
     >
       <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
-        <a href="#" className="text-xl font-display font-bold tracking-tighter flex items-center gap-2">
+        <a href="/" className="text-xl font-display font-bold tracking-tighter flex items-center gap-2">
           <span className="text-neon-green">V</span>
           <span className="text-zinc-100">Kashyap</span>
         </a>
@@ -40,7 +45,7 @@ export default function Navbar() {
           {navItems.map((item) => (
             <a
               key={item.name}
-              href={item.href}
+              href={getHref(item.href)}
               className="text-sm font-medium text-zinc-400 hover:text-neon-green transition-colors"
             >
               {item.name}
@@ -68,7 +73,7 @@ export default function Navbar() {
           {navItems.map((item) => (
             <a
               key={item.name}
-              href={item.href}
+              href={getHref(item.href)}
               onClick={() => setIsMobileMenuOpen(false)}
               className="text-lg font-medium text-zinc-300 hover:text-neon-green transition-colors"
             >

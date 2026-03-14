@@ -61,13 +61,13 @@ export default function YouTube() {
           >
             <div className="aspect-video rounded-2xl overflow-hidden border-2 border-zinc-800 shadow-2xl relative group cursor-pointer">
               <img 
-                src="https://picsum.photos/seed/youtube/800/450" 
-                alt="YouTube Channel" 
+                src="https://i.ytimg.com/vi/5b5W3Sq-OxY/maxresdefault.jpg" 
+                alt="GTA V Low End PC Optimization" 
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                 referrerPolicy="no-referrer"
               />
               <a 
-                href="https://youtube.com/@techbyvansh?si=z_dNM2ooAKwoNI2M"
+                href="https://youtu.be/5b5W3Sq-OxY"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="absolute inset-0 bg-zinc-950/40 group-hover:bg-zinc-950/20 transition-colors flex items-center justify-center"

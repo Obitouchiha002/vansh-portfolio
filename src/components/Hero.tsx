@@ -1,7 +1,10 @@
 import { motion } from 'motion/react';
 import { ArrowRight, Mail } from 'lucide-react';
+import { useState } from 'react';
 
 export default function Hero() {
+  const [isImageLoaded, setIsImageLoaded] = useState(false);
+
   return (
     <section className="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden">
       {/* Background decorative elements */}
@@ -59,21 +62,32 @@ export default function Hero() {
           className="relative w-full max-w-[280px] sm:max-w-sm mx-auto md:max-w-none order-first md:order-last"
         >
           <div className="aspect-square rounded-2xl overflow-hidden border border-zinc-800 bg-zinc-900/50 relative group">
-            <div className="absolute inset-0 bg-gradient-to-tr from-neon-green/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            <div className="absolute inset-0 bg-gradient-to-tr from-neon-green/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10" />
+            
+            {/* Skeleton Loader */}
+            {!isImageLoaded && (
+              <div className="absolute inset-0 bg-zinc-800 animate-pulse" />
+            )}
+
             <img 
-              src="/Picsart_25-08-12_18-04-46-235.png" 
+              src="/profile.webp" 
               alt="Vansh Kashyap" 
+              fetchPriority="high"
+              loading="eager"
+              decoding="async"
+              onLoad={() => setIsImageLoaded(true)}
               onError={(e) => {
                 e.currentTarget.src = "https://picsum.photos/seed/techcreator/800/800";
+                setIsImageLoaded(true);
               }}
-              className="w-full h-full object-cover object-top grayscale hover:grayscale-0 transition-all duration-500"
+              className={`w-full h-full object-cover object-top grayscale hover:grayscale-0 transition-all duration-700 ${isImageLoaded ? 'opacity-100' : 'opacity-0'}`}
             />
             
             {/* Floating tech badges */}
-            <div className="absolute top-4 -left-2 md:top-8 md:-left-8 bg-zinc-900 border border-zinc-800 px-3 py-1.5 md:px-4 md:py-2 rounded-lg shadow-xl backdrop-blur-sm z-10">
+            <div className="absolute top-4 -left-2 md:top-8 md:-left-8 bg-zinc-900 border border-zinc-800 px-3 py-1.5 md:px-4 md:py-2 rounded-lg shadow-xl backdrop-blur-sm z-20">
               <span className="text-neon-blue font-mono text-xs md:text-sm">{'<IT Support />'}</span>
             </div>
-            <div className="absolute bottom-8 -right-2 md:bottom-12 md:-right-8 bg-zinc-900 border border-zinc-800 px-3 py-1.5 md:px-4 md:py-2 rounded-lg shadow-xl backdrop-blur-sm z-10">
+            <div className="absolute bottom-8 -right-2 md:bottom-12 md:-right-8 bg-zinc-900 border border-zinc-800 px-3 py-1.5 md:px-4 md:py-2 rounded-lg shadow-xl backdrop-blur-sm z-20">
               <span className="text-neon-green font-mono text-xs md:text-sm">{'<Creator />'}</span>
             </div>
           </div>
