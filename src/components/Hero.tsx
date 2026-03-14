@@ -53,10 +53,10 @@ export default function Hero() {
         </motion.div>
         
         <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
+          initial={{ opacity: 0, scale: 0.8, y: 20 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
-          className="relative hidden md:block"
+          className="relative w-full max-w-[280px] sm:max-w-sm mx-auto md:max-w-none order-first md:order-last"
         >
           <div className="aspect-square rounded-2xl overflow-hidden border border-zinc-800 bg-zinc-900/50 relative group">
             <div className="absolute inset-0 bg-gradient-to-tr from-neon-green/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
@@ -70,11 +70,11 @@ export default function Hero() {
             />
             
             {/* Floating tech badges */}
-            <div className="absolute top-8 -left-8 bg-zinc-900 border border-zinc-800 px-4 py-2 rounded-lg shadow-xl backdrop-blur-sm">
-              <span className="text-neon-blue font-mono text-sm">{'<IT Support />'}</span>
+            <div className="absolute top-4 -left-2 md:top-8 md:-left-8 bg-zinc-900 border border-zinc-800 px-3 py-1.5 md:px-4 md:py-2 rounded-lg shadow-xl backdrop-blur-sm z-10">
+              <span className="text-neon-blue font-mono text-xs md:text-sm">{'<IT Support />'}</span>
             </div>
-            <div className="absolute bottom-12 -right-8 bg-zinc-900 border border-zinc-800 px-4 py-2 rounded-lg shadow-xl backdrop-blur-sm">
-              <span className="text-neon-green font-mono text-sm">{'<Creator />'}</span>
+            <div className="absolute bottom-8 -right-2 md:bottom-12 md:-right-8 bg-zinc-900 border border-zinc-800 px-3 py-1.5 md:px-4 md:py-2 rounded-lg shadow-xl backdrop-blur-sm z-10">
+              <span className="text-neon-green font-mono text-xs md:text-sm">{'<Creator />'}</span>
             </div>
           </div>
         </motion.div>
