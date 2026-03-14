@@ -4,6 +4,7 @@ import { useState } from 'react';
 import ThumbnailsGallery from './ThumbnailsGallery';
 import GameTestingGallery from './GameTestingGallery';
 import GamingSolutionsGallery from './GamingSolutionsGallery';
+import ResumeModal from './ResumeModal';
 
 const projects = [
   {
@@ -36,7 +37,7 @@ const projects = [
     icon: Code,
     image: '/My Resume.png',
     description: 'A comprehensive overview of my skills, education, and certifications in IT Support and Tech.',
-    link: '/resume',
+    isResumeGallery: true,
   },
 ];
 
@@ -44,6 +45,7 @@ export default function Projects() {
   const [isGalleryOpen, setIsGalleryOpen] = useState(false);
   const [isGameGalleryOpen, setIsGameGalleryOpen] = useState(false);
   const [isGamingSolutionsGalleryOpen, setIsGamingSolutionsGalleryOpen] = useState(false);
+  const [isResumeModalOpen, setIsResumeModalOpen] = useState(false);
 
   return (
     <section id="projects" className="py-24 relative">
@@ -121,6 +123,13 @@ export default function Projects() {
                   >
                     View Gallery <ExternalLink size={16} />
                   </button>
+                ) : project.isResumeGallery ? (
+                  <button 
+                    onClick={() => setIsResumeModalOpen(true)}
+                    className="text-sm font-medium text-zinc-300 hover:text-neon-green flex items-center gap-2 transition-colors"
+                  >
+                    View Resume <ExternalLink size={16} />
+                  </button>
                 ) : (
                   <button className="text-sm font-medium text-zinc-300 hover:text-neon-green flex items-center gap-2 transition-colors">
                     View Project <ExternalLink size={16} />
@@ -143,6 +152,10 @@ export default function Projects() {
       <GamingSolutionsGallery 
         isOpen={isGamingSolutionsGalleryOpen} 
         onClose={() => setIsGamingSolutionsGalleryOpen(false)} 
+      />
+      <ResumeModal 
+        isOpen={isResumeModalOpen} 
+        onClose={() => setIsResumeModalOpen(false)} 
       />
     </section>
   );

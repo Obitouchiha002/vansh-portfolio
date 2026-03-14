@@ -62,8 +62,6 @@ export default function Hero() {
           className="relative w-full max-w-[280px] sm:max-w-sm mx-auto md:max-w-none order-first md:order-last"
         >
           <div className="aspect-square rounded-2xl overflow-hidden border border-zinc-800 bg-zinc-900/50 relative group">
-            <div className="absolute inset-0 bg-gradient-to-tr from-neon-green/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10" />
-            
             {/* Skeleton Loader */}
             {!isImageLoaded && (
               <div className="absolute inset-0 bg-zinc-800 animate-pulse" />
