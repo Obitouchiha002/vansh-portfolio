@@ -25,7 +25,7 @@ export default function Footer() {
         <div className="flex items-center gap-4">
           <button 
             onClick={scrollToTop}
-            className="w-10 h-10 rounded-full bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-400 hover:text-neon-green hover:border-neon-green/50 transition-colors"
+            className="w-10 h-10 rounded-full bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-400 hover:text-neon-green hover:border-neon-green/50 active:text-neon-green active:border-neon-green/50 transition-colors"
             aria-label="Scroll to top"
           >
             <ArrowUp size={20} />

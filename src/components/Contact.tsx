@@ -1,5 +1,5 @@
 import { motion } from 'motion/react';
-import { Mail, MapPin, Linkedin, Send } from 'lucide-react';
+import { Mail, Linkedin, Send, MessageCircle, Instagram, Youtube } from 'lucide-react';
 
 export default function Contact() {
   return (
@@ -27,43 +27,90 @@ export default function Contact() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="md:col-span-5 flex flex-col gap-8"
+            className="md:col-span-5 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 gap-4"
           >
-            <div className="bg-zinc-900 border border-zinc-800 p-8 rounded-2xl flex items-start gap-6 hover:border-neon-green/30 transition-colors group">
-              <div className="w-14 h-14 bg-zinc-800 rounded-xl flex items-center justify-center shrink-0 group-hover:bg-neon-green/10 transition-colors">
-                <Mail size={28} className="text-zinc-400 group-hover:text-neon-green transition-colors" />
+            {/* WhatsApp */}
+            <motion.a 
+              whileTap={{ scale: 0.95 }}
+              href="https://wa.me/918800628376" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="bg-zinc-900 border border-zinc-800 p-6 rounded-2xl flex items-center gap-5 hover:border-[#25D366]/50 active:border-[#25D366]/50 transition-colors group"
+            >
+              <div className="w-12 h-12 bg-zinc-800 rounded-xl flex items-center justify-center shrink-0 group-hover:bg-[#25D366]/10 group-active:bg-[#25D366]/10 transition-colors">
+                <MessageCircle size={24} className="text-zinc-400 group-hover:text-[#25D366] group-active:text-[#25D366] transition-colors" />
               </div>
               <div>
-                <h3 className="text-xl font-display font-bold text-zinc-100 mb-2">Email Me</h3>
-                <a href="mailto:vk1234888i@gmail.com" className="text-zinc-400 hover:text-neon-green transition-colors text-lg break-all">
-                  vk1234888i@gmail.com
-                </a>
+                <h3 className="text-lg font-display font-bold text-zinc-100 mb-1">WhatsApp</h3>
+                <p className="text-zinc-400 text-sm group-hover:text-[#25D366] group-active:text-[#25D366] transition-colors">+91 8800628376</p>
               </div>
-            </div>
+            </motion.a>
 
-            <div className="bg-zinc-900 border border-zinc-800 p-8 rounded-2xl flex items-start gap-6 hover:border-neon-blue/30 transition-colors group">
-              <div className="w-14 h-14 bg-zinc-800 rounded-xl flex items-center justify-center shrink-0 group-hover:bg-neon-blue/10 transition-colors">
-                <Linkedin size={28} className="text-zinc-400 group-hover:text-neon-blue transition-colors" />
+            {/* Instagram */}
+            <motion.a 
+              whileTap={{ scale: 0.95 }}
+              href="https://instagram.com/vanshkashyap70" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="bg-zinc-900 border border-zinc-800 p-6 rounded-2xl flex items-center gap-5 hover:border-[#E1306C]/50 active:border-[#E1306C]/50 transition-colors group"
+            >
+              <div className="w-12 h-12 bg-zinc-800 rounded-xl flex items-center justify-center shrink-0 group-hover:bg-[#E1306C]/10 group-active:bg-[#E1306C]/10 transition-colors">
+                <Instagram size={24} className="text-zinc-400 group-hover:text-[#E1306C] group-active:text-[#E1306C] transition-colors" />
               </div>
               <div>
-                <h3 className="text-xl font-display font-bold text-zinc-100 mb-2">LinkedIn</h3>
-                <a href="#" className="text-zinc-400 hover:text-neon-blue transition-colors text-lg">
-                  Vansh Kashyap
-                </a>
+                <h3 className="text-lg font-display font-bold text-zinc-100 mb-1">Instagram</h3>
+                <p className="text-zinc-400 text-sm group-hover:text-[#E1306C] group-active:text-[#E1306C] transition-colors">@vanshkashyap70</p>
               </div>
-            </div>
+            </motion.a>
 
-            <div className="bg-zinc-900 border border-zinc-800 p-8 rounded-2xl flex items-start gap-6 hover:border-zinc-600 transition-colors group">
-              <div className="w-14 h-14 bg-zinc-800 rounded-xl flex items-center justify-center shrink-0 group-hover:bg-zinc-700 transition-colors">
-                <MapPin size={28} className="text-zinc-400 group-hover:text-zinc-200 transition-colors" />
+            {/* YouTube */}
+            <motion.a 
+              whileTap={{ scale: 0.95 }}
+              href="https://youtube.com/@techbyvansh?si=z_dNM2ooAKwoNI2M" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="bg-zinc-900 border border-zinc-800 p-6 rounded-2xl flex items-center gap-5 hover:border-[#FF0000]/50 active:border-[#FF0000]/50 transition-colors group"
+            >
+              <div className="w-12 h-12 bg-zinc-800 rounded-xl flex items-center justify-center shrink-0 group-hover:bg-[#FF0000]/10 group-active:bg-[#FF0000]/10 transition-colors">
+                <Youtube size={24} className="text-zinc-400 group-hover:text-[#FF0000] group-active:text-[#FF0000] transition-colors" />
               </div>
               <div>
-                <h3 className="text-xl font-display font-bold text-zinc-100 mb-2">Location</h3>
-                <p className="text-zinc-400 text-lg">
-                  New Delhi, India
-                </p>
+                <h3 className="text-lg font-display font-bold text-zinc-100 mb-1">YouTube</h3>
+                <p className="text-zinc-400 text-sm group-hover:text-[#FF0000] group-active:text-[#FF0000] transition-colors">Tech By Vansh</p>
               </div>
-            </div>
+            </motion.a>
+
+            {/* Email */}
+            <motion.a 
+              whileTap={{ scale: 0.95 }}
+              href="mailto:vk1234888i@gmail.com"
+              className="bg-zinc-900 border border-zinc-800 p-6 rounded-2xl flex items-center gap-5 hover:border-neon-green/30 active:border-neon-green/30 transition-colors group"
+            >
+              <div className="w-12 h-12 bg-zinc-800 rounded-xl flex items-center justify-center shrink-0 group-hover:bg-neon-green/10 group-active:bg-neon-green/10 transition-colors">
+                <Mail size={24} className="text-zinc-400 group-hover:text-neon-green group-active:text-neon-green transition-colors" />
+              </div>
+              <div className="overflow-hidden">
+                <h3 className="text-lg font-display font-bold text-zinc-100 mb-1">Email</h3>
+                <p className="text-zinc-400 text-sm group-hover:text-neon-green group-active:text-neon-green transition-colors truncate">vk1234888i@gmail.com</p>
+              </div>
+            </motion.a>
+
+            {/* LinkedIn */}
+            <motion.a 
+              whileTap={{ scale: 0.95 }}
+              href="https://www.linkedin.com/in/vansh-kashyap-32a46a2a6"
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="bg-zinc-900 border border-zinc-800 p-6 rounded-2xl flex items-center gap-5 hover:border-[#0077b5]/50 active:border-[#0077b5]/50 transition-colors group"
+            >
+              <div className="w-12 h-12 bg-zinc-800 rounded-xl flex items-center justify-center shrink-0 group-hover:bg-[#0077b5]/10 group-active:bg-[#0077b5]/10 transition-colors">
+                <Linkedin size={24} className="text-zinc-400 group-hover:text-[#0077b5] group-active:text-[#0077b5] transition-colors" />
+              </div>
+              <div>
+                <h3 className="text-lg font-display font-bold text-zinc-100 mb-1">LinkedIn</h3>
+                <p className="text-zinc-400 text-sm group-hover:text-[#0077b5] group-active:text-[#0077b5] transition-colors">Vansh Kashyap</p>
+              </div>
+            </motion.a>
           </motion.div>
 
           <motion.div
@@ -76,7 +123,7 @@ export default function Contact() {
             <form 
               action="https://formsubmit.co/vk1234888i@gmail.com" 
               method="POST"
-              className="bg-zinc-900 border border-zinc-800 p-8 rounded-2xl flex flex-col gap-6"
+              className="bg-zinc-900 border border-zinc-800 p-8 rounded-2xl flex flex-col gap-6 h-full"
             >
               {/* Disable Captcha for smoother UX (optional) */}
               <input type="hidden" name="_captcha" value="false" />
@@ -116,15 +163,14 @@ export default function Contact() {
                   className="bg-zinc-950 border border-zinc-800 rounded-lg px-4 py-3 text-zinc-100 focus:outline-none focus:border-neon-green focus:ring-1 focus:ring-neon-green transition-all"
                 />
               </div>
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-2 flex-grow">
                 <label htmlFor="message" className="text-sm font-medium text-zinc-400">Message</label>
                 <textarea 
                   id="message" 
                   name="message"
                   required
-                  rows={5}
                   placeholder="Hello Vansh, I would like to discuss..."
-                  className="bg-zinc-950 border border-zinc-800 rounded-lg px-4 py-3 text-zinc-100 focus:outline-none focus:border-neon-green focus:ring-1 focus:ring-neon-green transition-all resize-none"
+                  className="bg-zinc-950 border border-zinc-800 rounded-lg px-4 py-3 text-zinc-100 focus:outline-none focus:border-neon-green focus:ring-1 focus:ring-neon-green transition-all resize-none h-full min-h-[150px]"
                 ></textarea>
               </div>
               <button 

@@ -3,8 +3,6 @@ import { ArrowRight, Mail } from 'lucide-react';
 import { useState } from 'react';
 
 export default function Hero() {
-  const [isImageLoaded, setIsImageLoaded] = useState(false);
-
   return (
     <section className="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden">
       {/* Background decorative elements */}
@@ -38,20 +36,22 @@ export default function Hero() {
           </p>
           
           <div className="flex flex-wrap items-center gap-4 mt-4">
-            <a
+            <motion.a
+              whileTap={{ scale: 0.95 }}
               href="#projects"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-neon-green text-zinc-950 font-semibold hover:bg-neon-green/90 transition-colors box-glow-hover"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-neon-green text-zinc-950 font-semibold hover:bg-neon-green/90 active:bg-neon-green/90 transition-colors box-glow-hover"
             >
               View My Work
               <ArrowRight size={18} />
-            </a>
-            <a
+            </motion.a>
+            <motion.a
+              whileTap={{ scale: 0.95 }}
               href="#contact"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-zinc-900 text-zinc-100 font-semibold border border-zinc-800 hover:bg-zinc-800 transition-colors"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-zinc-900 text-zinc-100 font-semibold border border-zinc-800 hover:bg-zinc-800 active:bg-zinc-800 transition-colors"
             >
               <Mail size={18} />
               Contact Me
-            </a>
+            </motion.a>
           </div>
         </motion.div>
         
@@ -61,24 +61,20 @@ export default function Hero() {
           transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
           className="relative w-full max-w-[280px] sm:max-w-sm mx-auto md:max-w-none order-first md:order-last"
         >
-          <div className="aspect-square rounded-2xl overflow-hidden border border-zinc-800 bg-zinc-900/50 relative group">
-            {/* Skeleton Loader */}
-            {!isImageLoaded && (
-              <div className="absolute inset-0 bg-zinc-800 animate-pulse" />
-            )}
-
+          <motion.div 
+            whileTap={{ scale: 0.98 }}
+            className="aspect-square rounded-2xl overflow-hidden border border-zinc-800 bg-zinc-900/50 relative group cursor-pointer"
+          >
             <img 
-              src="/profile.webp" 
+              src="/Picsart_25-08-12_18-04-46-235-1.png" 
               alt="Vansh Kashyap" 
               fetchPriority="high"
               loading="eager"
               decoding="async"
-              onLoad={() => setIsImageLoaded(true)}
               onError={(e) => {
                 e.currentTarget.src = "https://picsum.photos/seed/techcreator/800/800";
-                setIsImageLoaded(true);
               }}
-              className={`w-full h-full object-cover object-top grayscale hover:grayscale-0 transition-all duration-700 ${isImageLoaded ? 'opacity-100' : 'opacity-0'}`}
+              className="w-full h-full object-cover object-top grayscale group-hover:grayscale-0 group-active:grayscale-0 transition-all duration-700"
             />
             
             {/* Floating tech badges */}
@@ -88,7 +84,7 @@ export default function Hero() {
             <div className="absolute bottom-8 -right-2 md:bottom-12 md:-right-8 bg-zinc-900 border border-zinc-800 px-3 py-1.5 md:px-4 md:py-2 rounded-lg shadow-xl backdrop-blur-sm z-20">
               <span className="text-neon-green font-mono text-xs md:text-sm">{'<Creator />'}</span>
             </div>
-          </div>
+          </motion.div>
         </motion.div>
       </div>
     </section>

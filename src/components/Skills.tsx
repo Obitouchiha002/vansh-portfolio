@@ -85,10 +85,11 @@ export default function Skills() {
                   whileInView={{ opacity: 1, scale: 1 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.4, delay: index * 0.1 }}
-                  className="bg-zinc-900 border border-zinc-800 p-6 rounded-xl flex flex-col items-center justify-center text-center gap-4 hover:border-neon-green/50 transition-colors group"
+                  whileTap={{ scale: 0.95 }}
+                  className="bg-zinc-900 border border-zinc-800 p-6 rounded-xl flex flex-col items-center justify-center text-center gap-4 hover:border-neon-green/50 active:border-neon-green/50 transition-colors group cursor-pointer"
                 >
-                  <div className="w-12 h-12 rounded-full bg-zinc-800 flex items-center justify-center group-hover:bg-neon-green/10 transition-colors">
-                    <skill.icon size={24} className="text-zinc-400 group-hover:text-neon-green transition-colors" />
+                  <div className="w-12 h-12 rounded-full bg-zinc-800 flex items-center justify-center group-hover:bg-neon-green/10 group-active:bg-neon-green/10 transition-colors">
+                    <skill.icon size={24} className="text-zinc-400 group-hover:text-neon-green group-active:text-neon-green transition-colors" />
                   </div>
                   <span className="font-medium text-zinc-200">{skill.name}</span>
                 </motion.div>

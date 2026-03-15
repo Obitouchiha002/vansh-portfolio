@@ -59,7 +59,10 @@ export default function Education() {
                 <div className="w-2 h-2 rounded-full bg-neon-green" />
               </div>
               
-              <div className="bg-zinc-900/50 border border-zinc-800 p-6 rounded-xl hover:border-neon-green/30 transition-colors group">
+              <motion.div
+                whileTap={{ scale: 0.98 }}
+                className="bg-zinc-900/50 border border-zinc-800 p-6 rounded-xl hover:border-neon-green/30 active:border-neon-green/30 transition-colors group cursor-pointer"
+              >
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
                   <h3 className="text-xl font-display font-semibold text-zinc-100 flex items-center gap-2">
                     <GraduationCap className="text-neon-green" size={20} />
@@ -76,7 +79,7 @@ export default function Education() {
                     {item.percentage}
                   </div>
                 </div>
-              </div>
+              </motion.div>
             </motion.div>
           ))}
         </div>

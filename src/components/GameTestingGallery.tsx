@@ -91,24 +91,25 @@ export default function GameTestingGallery({ isOpen, onClose }: { isOpen: boolea
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 0.3, delay: item.id * 0.05 }}
-                  className="group relative rounded-2xl overflow-hidden bg-zinc-900 border border-zinc-800 cursor-pointer" 
+                  whileTap={{ scale: 0.95 }}
+                  className="group relative rounded-2xl overflow-hidden bg-zinc-900 border border-zinc-800 cursor-pointer active:border-neon-green/50 transition-colors" 
                   onClick={() => setActiveVideo(item.videoId)}
                 >
                   <div className="aspect-video overflow-hidden relative">
                     <img 
                       src={item.image} 
                       alt={item.title} 
-                      className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
+                      className="w-full h-full object-cover transform group-hover:scale-105 group-active:scale-105 transition-transform duration-700"
                       referrerPolicy="no-referrer"
                     />
-                    <div className="absolute inset-0 bg-zinc-950/40 group-hover:bg-zinc-950/20 transition-colors flex items-center justify-center">
-                      <div className="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center shadow-[0_0_30px_rgba(220,38,38,0.6)] group-hover:scale-110 transition-transform">
+                    <div className="absolute inset-0 bg-zinc-950/40 group-hover:bg-zinc-950/20 group-active:bg-zinc-950/20 transition-colors flex items-center justify-center">
+                      <div className="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center shadow-[0_0_30px_rgba(220,38,38,0.6)] group-hover:scale-110 group-active:scale-110 transition-transform">
                         <Play className="text-white ml-1" size={24} fill="currentColor" />
                       </div>
                     </div>
                   </div>
                   <div className="p-4">
-                    <h3 className="text-lg font-bold text-zinc-100 group-hover:text-neon-green transition-colors line-clamp-2">
+                    <h3 className="text-lg font-bold text-zinc-100 group-hover:text-neon-green group-active:text-neon-green transition-colors line-clamp-2">
                       {item.title}
                     </h3>
                   </div>
