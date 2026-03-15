@@ -23,7 +23,7 @@ const toolCategories = [
     icon: <Briefcase className="text-neon-blue mb-4" size={32} />,
     color: "neon-blue",
     tools: [
-      { name: "Resume & CV Maker", icon: <FileText size={18} />, description: "Create a professional resume or CV", href: "/tools/resume-maker" }
+      { name: "Resume & CV Maker", icon: <FileText size={18} />, description: "Create a professional resume or CV", href: "#/tools/resume-maker" }
     ]
   },
   {
@@ -31,10 +31,10 @@ const toolCategories = [
     icon: <ImageIcon className="text-neon-green mb-4" size={32} />,
     color: "neon-green",
     tools: [
-      { name: "Image to PNG", icon: <FileImage size={18} />, description: "Convert images to PNG format", href: "/tools/jpg-to-png" },
-      { name: "PNG to JPG", icon: <FileImage size={18} />, description: "Convert PNG files to JPG", href: "/tools/png-to-jpg" },
-      { name: "Image Compressor", icon: <Minimize size={18} />, description: "Reduce image file size", href: "/tools/image-compressor" },
-      { name: "Image Resizer", icon: <Maximize size={18} />, description: "Resize image dimensions", href: "/tools/image-resizer" }
+      { name: "Image to PNG", icon: <FileImage size={18} />, description: "Convert images to PNG format", href: "#/tools/jpg-to-png" },
+      { name: "PNG to JPG", icon: <FileImage size={18} />, description: "Convert PNG files to JPG", href: "#/tools/png-to-jpg" },
+      { name: "Image Compressor", icon: <Minimize size={18} />, description: "Reduce image file size", href: "#/tools/image-compressor" },
+      { name: "Image Resizer", icon: <Maximize size={18} />, description: "Resize image dimensions", href: "#/tools/image-resizer" }
     ]
   },
   {
@@ -42,10 +42,10 @@ const toolCategories = [
     icon: <FileType2 className="text-red-500 mb-4" size={32} />,
     color: "red-500",
     tools: [
-      { name: "PDF to Word", icon: <ArrowRightLeft size={18} />, description: "Convert PDF documents to Word", href: "/tools/pdf-to-word" },
-      { name: "Word to PDF", icon: <ArrowRightLeft size={18} />, description: "Convert Word documents to PDF", href: "/tools/word-to-pdf" },
-      { name: "Merge PDF", icon: <FileType2 size={18} />, description: "Combine multiple PDFs", href: "/tools/merge-pdf" },
-      { name: "Compress PDF", icon: <Minimize size={18} />, description: "Reduce PDF file size", href: "/tools/compress-pdf" }
+      { name: "PDF to Word", icon: <ArrowRightLeft size={18} />, description: "Convert PDF documents to Word", href: "#/tools/pdf-to-word" },
+      { name: "Word to PDF", icon: <ArrowRightLeft size={18} />, description: "Convert Word documents to PDF", href: "#/tools/word-to-pdf" },
+      { name: "Merge PDF", icon: <FileType2 size={18} />, description: "Combine multiple PDFs", href: "#/tools/merge-pdf" },
+      { name: "Compress PDF", icon: <Minimize size={18} />, description: "Reduce PDF file size", href: "#/tools/compress-pdf" }
     ]
   },
   {
@@ -53,8 +53,8 @@ const toolCategories = [
     icon: <Type className="text-purple-500 mb-4" size={32} />,
     color: "purple-500",
     tools: [
-      { name: "Word Counter", icon: <Type size={18} />, description: "Count words and characters", href: "/tools/word-counter" },
-      { name: "Text Formatter", icon: <AlignLeft size={18} />, description: "Format text cases", href: "/tools/text-formatter" }
+      { name: "Word Counter", icon: <Type size={18} />, description: "Count words and characters", href: "#/tools/word-counter" },
+      { name: "Text Formatter", icon: <AlignLeft size={18} />, description: "Format text cases", href: "#/tools/text-formatter" }
     ]
   },
   {
@@ -62,34 +62,30 @@ const toolCategories = [
     icon: <Wrench className="text-orange-500 mb-4" size={32} />,
     color: "orange-500",
     tools: [
-      { name: "Unit Converter", icon: <Calculator size={18} />, description: "Convert between different units", href: "/tools/unit-converter" },
-      { name: "File Size Calculator", icon: <FileDigit size={18} />, description: "Calculate file sizes", href: "/tools/file-size-calculator" }
+      { name: "Unit Converter", icon: <Calculator size={18} />, description: "Convert between different units", href: "#/tools/unit-converter" },
+      { name: "File Size Calculator", icon: <FileDigit size={18} />, description: "Calculate file sizes", href: "#/tools/file-size-calculator" }
     ]
   }
 ];
 
 export default function Tools() {
   return (
-    <div className="min-h-screen pt-24 pb-12 px-6 flex flex-col relative overflow-hidden">
+    <section id="tools" className="py-24 relative overflow-hidden bg-zinc-950">
       {/* Background glow */}
       <div className="absolute top-1/4 left-0 w-[500px] h-[500px] bg-neon-blue/5 rounded-full blur-[120px] -z-10" />
       <div className="absolute bottom-1/4 right-0 w-[500px] h-[500px] bg-neon-green/5 rounded-full blur-[120px] -z-10" />
 
-      <div className="max-w-7xl mx-auto w-full flex-1">
+      <div className="max-w-7xl mx-auto px-6 w-full flex-1">
         <motion.div 
           initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
           className="mb-12"
         >
-          <a 
-            href="/" 
-            className="inline-flex items-center gap-2 text-zinc-400 hover:text-neon-green transition-colors mb-6"
-          >
-            <ArrowLeft size={16} /> Back to Portfolio
-          </a>
-          <h1 className="text-4xl md:text-5xl font-display font-bold mb-4">
+          <h2 className="text-3xl md:text-5xl font-display font-bold mb-4">
             Free <span className="text-neon-blue">Tools</span>
-          </h1>
+          </h2>
+          <div className="w-20 h-1 bg-neon-blue rounded-full mb-6" />
           <p className="text-xl text-zinc-400 max-w-2xl">
             A collection of handy utilities and tools to help you with your daily tasks, from resume building to file conversion.
           </p>
@@ -100,7 +96,8 @@ export default function Tools() {
             <motion.div
               key={category.title}
               initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
               transition={{ delay: idx * 0.1 }}
               className="bg-zinc-900/50 border border-zinc-800 rounded-2xl p-6 md:p-8 hover:border-zinc-700 transition-colors"
             >
@@ -136,6 +133,6 @@ export default function Tools() {
           ))}
         </div>
       </div>
-    </div>
+    </section>
   );
 }

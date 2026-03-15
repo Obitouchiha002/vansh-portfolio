@@ -23,7 +23,7 @@ export default function ToolLayout({ title, description, steps, children }: Tool
           className="mb-12 print:hidden"
         >
           <a 
-            href="/tools" 
+            href="#/tools" 
             className="inline-flex items-center gap-2 text-zinc-400 hover:text-neon-green transition-colors mb-6"
           >
             <ArrowLeft size={16} /> Back to Tools

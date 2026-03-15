@@ -174,7 +174,7 @@ export default function ToolRoute({ path }: ToolRouteProps) {
         <div className="min-h-screen pt-32 pb-12 px-6 flex flex-col items-center justify-center text-center">
           <h1 className="text-4xl font-bold text-zinc-100 mb-4">Tool Not Found</h1>
           <p className="text-zinc-400 mb-8">The tool you are looking for does not exist or is currently under development.</p>
-          <a href="/tools" className="px-6 py-3 bg-neon-green text-zinc-950 font-bold rounded-lg hover:bg-neon-green/90 transition-colors">
+          <a href="#/tools" className="px-6 py-3 bg-neon-green text-zinc-950 font-bold rounded-lg hover:bg-neon-green/90 transition-colors">
             Back to Tools
           </a>
         </div>

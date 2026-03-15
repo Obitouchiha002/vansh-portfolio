@@ -16,11 +16,11 @@ import Tools from './components/Tools';
 import ToolRoute from './components/tools/ToolRoute';
 
 export default function App() {
-  const [currentPath, setCurrentPath] = useState(window.location.pathname);
+  const [currentPath, setCurrentPath] = useState(window.location.hash || '#/');
 
   useEffect(() => {
     const handleLocationChange = () => {
-      setCurrentPath(window.location.pathname);
+      setCurrentPath(window.location.hash || '#/');
     };
 
     // Site-wide security
@@ -44,16 +44,28 @@ export default function App() {
     // Disable text selection/copying (via CSS class on body)
     document.body.classList.add('select-none');
 
-    window.addEventListener('popstate', handleLocationChange);
+    window.addEventListener('hashchange', handleLocationChange);
     return () => {
-      window.removeEventListener('popstate', handleLocationChange);
+      window.removeEventListener('hashchange', handleLocationChange);
       document.removeEventListener('contextmenu', preventDefault);
       document.removeEventListener('keydown', handleKeyDown);
       document.body.classList.remove('select-none');
     };
   }, []);
 
-  if (currentPath === '/resume') {
+  useEffect(() => {
+    if (currentPath.startsWith('#') && !currentPath.startsWith('#/')) {
+      const id = currentPath.substring(1);
+      const element = document.getElementById(id);
+      if (element) {
+        setTimeout(() => {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }, 100);
+      }
+    }
+  }, [currentPath]);
+
+  if (currentPath === '#/resume') {
     return (
       <div className="min-h-screen bg-zinc-950 text-zinc-50 font-sans selection:bg-neon-green/30 selection:text-neon-green print:bg-white print:text-black">
         <div className="print:hidden"><Navbar /></div>
@@ -63,21 +75,13 @@ export default function App() {
     );
   }
 
-  if (currentPath === '/tools') {
-    return (
-      <div className="min-h-screen bg-zinc-950 text-zinc-50 font-sans selection:bg-neon-green/30 selection:text-neon-green">
-        <Navbar />
-        <Tools />
-        <Footer />
-      </div>
-    );
-  }
-
-  if (currentPath.startsWith('/tools/')) {
+  if (currentPath.startsWith('#/tools/')) {
+    // Convert hash path to the format expected by ToolRoute (e.g., /tools/png-to-jpg)
+    const routePath = currentPath.replace('#', '');
     return (
       <div className="min-h-screen bg-zinc-950 text-zinc-50 font-sans selection:bg-neon-green/30 selection:text-neon-green print:bg-white print:text-black">
         <div className="print:hidden"><Navbar /></div>
-        <ToolRoute path={currentPath} />
+        <ToolRoute path={routePath} />
         <div className="print:hidden"><Footer /></div>
       </div>
     );
@@ -93,6 +97,7 @@ export default function App() {
         <Education />
         <Certifications />
         <Projects />
+        <Tools />
         <YouTube />
         <CareerGoal />
         {/* <Testimonials /> */}

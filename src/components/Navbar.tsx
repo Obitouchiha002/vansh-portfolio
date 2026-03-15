@@ -5,8 +5,8 @@ import { Menu, X, MoreHorizontal, ChevronDown } from 'lucide-react';
 const navItems = [
   { name: 'About', href: '#about' },
   { name: 'Projects', href: '#projects' },
-  { name: 'Tools', href: 'tools' },
-  { name: 'Resume', href: 'resume' },
+  { name: 'Tools', href: '#tools' },
+  { name: 'Resume', href: '#/resume' },
   { name: 'Skills', href: '#skills' },
   { name: 'Education', href: '#education' },
   { name: 'YouTube', href: '#youtube' },
@@ -18,7 +18,9 @@ export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMoreOpen, setIsMoreOpen] = useState(false);
   const moreMenuRef = useRef<HTMLDivElement>(null);
-  const isHomePage = window.location.pathname === '/';
+  
+  // Determine if we are on the home page (not a specific tool route or resume page)
+  const isHomePage = !window.location.hash.startsWith('#/tools/') && window.location.hash !== '#/resume';
 
   const visibleItems = navItems.slice(0, 4);
   const moreItems = navItems.slice(4);
@@ -42,7 +44,7 @@ export default function Navbar() {
   }, []);
 
   const getHref = (href: string) => {
-    return isHomePage ? href : `/${href}`;
+    return href;
   };
 
   return (
@@ -52,7 +54,7 @@ export default function Navbar() {
       }`}
     >
       <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
-        <a href="/" className="text-xl font-display font-bold tracking-tighter flex items-center gap-2 shrink-0">
+        <a href="#/" className="text-xl font-display font-bold tracking-tighter flex items-center gap-2 shrink-0">
           <span className="text-neon-green">V</span>
           <span className="text-zinc-100">Kashyap</span>
         </a>

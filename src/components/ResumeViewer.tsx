@@ -39,7 +39,7 @@ export default function ResumeViewer() {
         >
           <div>
             <a 
-              href="/" 
+              href="#/" 
               className="inline-flex items-center gap-2 text-zinc-400 hover:text-neon-green transition-colors mb-4"
             >
               <ArrowLeft size={16} /> Back to Portfolio
