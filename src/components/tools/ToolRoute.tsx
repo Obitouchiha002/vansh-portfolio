@@ -6,7 +6,6 @@ import PdfToWordTool from './PdfToWordTool';
 import WordToPdfTool from './WordToPdfTool';
 import MergePdfTool from './MergePdfTool';
 import CompressPdfTool from './CompressPdfTool';
-import ResumeMakerTool from './ResumeMakerTool';
 import TextTools from './TextTools';
 import UtilityTools from './UtilityTools';
 
@@ -99,19 +98,6 @@ export default function ToolRoute({ path }: ToolRouteProps) {
           steps={['Upload your PDF document', 'Click Compress PDF', 'Download the optimized file']}
         >
           <CompressPdfTool />
-        </ToolLayout>
-      );
-
-    // Resume Tools
-    case 'resume-maker':
-    case 'cv-maker':
-      return (
-        <ToolLayout 
-          title="Resume & CV Maker"
-          description="Build a professional resume or CV in minutes. Fill in your details and download as a PDF."
-          steps={['Fill in your personal information', 'Add your experience and education', 'Click Download as PDF']}
-        >
-          <ResumeMakerTool />
         </ToolLayout>
       );
 

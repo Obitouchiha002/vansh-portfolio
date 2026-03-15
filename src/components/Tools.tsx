@@ -19,14 +19,6 @@ import {
 
 const toolCategories = [
   {
-    title: "Resume Tools",
-    icon: <Briefcase className="text-neon-blue mb-4" size={32} />,
-    color: "neon-blue",
-    tools: [
-      { name: "Resume & CV Maker", icon: <FileText size={18} />, description: "Create a professional resume or CV", href: "#/tools/resume-maker" }
-    ]
-  },
-  {
     title: "File Tools",
     icon: <ImageIcon className="text-neon-green mb-4" size={32} />,
     color: "neon-green",
@@ -119,7 +111,7 @@ export default function Tools({ isOpen, onClose }: { isOpen: boolean; onClose: (
 
               <div className="mb-8">
                 <p className="text-zinc-400 max-w-2xl">
-                  A collection of handy utilities and tools to help you with your daily tasks, from resume building to file conversion.
+                  A collection of handy utilities and tools to help you with your daily tasks, from file conversion to text formatting.
                 </p>
               </div>
 

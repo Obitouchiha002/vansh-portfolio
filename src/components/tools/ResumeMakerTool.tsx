@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { Download, FileText, Plus, Trash2, AlertCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
-import html2canvas from 'html2canvas';
+import domtoimage from 'dom-to-image-more';
 import { jsPDF } from 'jspdf';
 
 interface Qualification {
@@ -154,20 +154,23 @@ export default function ResumeMakerTool() {
       // Wait a tick for the DOM to update
       await new Promise(resolve => setTimeout(resolve, 100));
 
-      const canvas = await html2canvas(element, {
-        scale: 2,
-        useCORS: true,
-        logging: false,
-        width: 794,
-        height: element.scrollHeight,
-        windowWidth: 794
+      const scale = 2;
+      const imgData = await domtoimage.toJpeg(element, {
+        quality: 0.98,
+        width: 794 * scale,
+        height: element.scrollHeight * scale,
+        style: {
+          transform: `scale(${scale})`,
+          transformOrigin: 'top left',
+          width: '794px',
+          height: `${element.scrollHeight}px`
+        }
       });
 
-      const imgData = canvas.toDataURL('image/jpeg', 0.98);
       const pdf = new jsPDF('p', 'mm', 'a4');
       
       const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+      const pdfHeight = (element.scrollHeight * pdfWidth) / 794;
       
       pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
       pdf.save(`${personalInfo.name.replace(/\s+/g, '_') || 'My'}_Resume.pdf`);
@@ -282,9 +285,9 @@ export default function ResumeMakerTool() {
                 </div>
               </div>
               <div className="flex flex-col gap-2">
-                <label className="text-sm text-zinc-400">Profile Picture *</label>
+                <label className="text-sm text-zinc-400">Profile Picture (Optional)</label>
                 <div className="flex items-center gap-4">
-                  <div className={`w-20 h-24 rounded bg-zinc-800 border overflow-hidden flex items-center justify-center ${errors.includes('profilePic') ? 'border-red-500' : 'border-zinc-700'}`}>
+                  <div className="w-20 h-24 rounded bg-zinc-800 border border-zinc-700 overflow-hidden flex items-center justify-center">
                     {personalInfo.profilePic ? (
                       <img src={personalInfo.profilePic} alt="Profile" className="w-full h-full object-cover" />
                     ) : (
@@ -295,6 +298,14 @@ export default function ResumeMakerTool() {
                     Upload Photo
                     <input type="file" className="hidden" accept="image/*" onChange={handleProfilePicChange} />
                   </label>
+                  {personalInfo.profilePic && (
+                    <button 
+                      onClick={() => setPersonalInfo({...personalInfo, profilePic: ''})}
+                      className="text-red-400 hover:text-red-300 text-sm"
+                    >
+                      Remove
+                    </button>
+                  )}
                 </div>
               </div>
             </div>
@@ -560,7 +571,7 @@ export default function ResumeMakerTool() {
             {/* The element to be printed */}
             <div 
               ref={resumeRef} 
-              className="bg-white text-black shadow-2xl relative print:shadow-none print:!w-full print:!min-h-0" 
+              className="bg-white text-black relative print:shadow-none print:!w-full print:!min-h-0 border-none" 
               style={{ 
                 width: '794px', 
                 minHeight: '1123px', 
@@ -585,7 +596,7 @@ export default function ResumeMakerTool() {
                   <div>Mob No. : {personalInfo.phone || '+91 XXXXXXXXXX'}</div>
                   <div>Email Id : {personalInfo.email || 'example@email.com'}</div>
                 </div>
-                <div className="w-[35mm] h-[45mm] border border-zinc-300 bg-zinc-100 flex items-center justify-center overflow-hidden shrink-0">
+                <div className="w-[35mm] h-[45mm] bg-zinc-100 flex items-center justify-center overflow-hidden shrink-0">
                   {personalInfo.profilePic ? (
                     <img src={personalInfo.profilePic} alt="Profile" className="w-full h-full object-cover" />
                   ) : (
@@ -601,7 +612,7 @@ export default function ResumeMakerTool() {
                 
                 {/* Career Objective */}
                 <div>
-                  <h3 className="bg-[#e0e0e0] font-bold text-[14px] px-2 py-1 mb-2 uppercase">CAREER OBJECTIVE</h3>
+                  <h3 className="bg-[#e0e0e0] font-bold text-[14px] px-2 py-1 mb-2 uppercase tracking-wide">CAREER OBJECTIVE</h3>
                   <p className="text-[13px] leading-snug text-justify">
                     {objective || 'Your career objective will appear here.'}
                   </p>
@@ -609,25 +620,25 @@ export default function ResumeMakerTool() {
 
                 {/* Academic Qualification */}
                 <div>
-                  <h3 className="bg-[#e0e0e0] font-bold text-[14px] px-2 py-1 mb-2 uppercase">ACADEMIC QUALIFICATION</h3>
-                  <table className="w-full text-[13px] border-collapse border border-zinc-300 text-center">
+                  <h3 className="bg-[#e0e0e0] font-bold text-[14px] px-2 py-1 mb-2 uppercase tracking-wide">ACADEMIC QUALIFICATION</h3>
+                  <table className="w-full text-[13px] border-collapse text-center">
                     <thead>
                       <tr className="bg-zinc-50">
-                        <th className="border border-zinc-300 p-1.5 font-bold w-12">S.No.</th>
-                        <th className="border border-zinc-300 p-1.5 font-bold text-left">Qualification</th>
-                        <th className="border border-zinc-300 p-1.5 font-bold text-left">University / Board</th>
-                        <th className="border border-zinc-300 p-1.5 font-bold">Year</th>
-                        <th className="border border-zinc-300 p-1.5 font-bold">Per %</th>
+                        <th className="p-1.5 font-bold w-12 border-b border-black">S.No.</th>
+                        <th className="p-1.5 font-bold text-left border-b border-black">Qualification</th>
+                        <th className="p-1.5 font-bold text-left border-b border-black">University / Board</th>
+                        <th className="p-1.5 font-bold border-b border-black">Year</th>
+                        <th className="p-1.5 font-bold border-b border-black">Per %</th>
                       </tr>
                     </thead>
                     <tbody>
                       {qualifications.map((q, i) => (
                         <tr key={q.id}>
-                          <td className="border border-zinc-300 p-1.5">{i + 1}</td>
-                          <td className="border border-zinc-300 p-1.5 text-left">{q.name}</td>
-                          <td className="border border-zinc-300 p-1.5 text-left">{q.university}</td>
-                          <td className="border border-zinc-300 p-1.5">{q.year}</td>
-                          <td className="border border-zinc-300 p-1.5">{q.percentage}</td>
+                          <td className="p-1.5 border-b border-zinc-200">{i + 1}</td>
+                          <td className="p-1.5 text-left border-b border-zinc-200">{q.name}</td>
+                          <td className="p-1.5 text-left border-b border-zinc-200">{q.university}</td>
+                          <td className="p-1.5 border-b border-zinc-200">{q.year}</td>
+                          <td className="p-1.5 border-b border-zinc-200">{q.percentage}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -637,7 +648,7 @@ export default function ResumeMakerTool() {
                 {/* Other Qualification */}
                 {otherQualifications.some(q => q.trim() !== '') && (
                   <div>
-                    <h3 className="bg-[#e0e0e0] font-bold text-[14px] px-2 py-1 mb-2 uppercase">OTHER QUALIFICATION</h3>
+                    <h3 className="bg-[#e0e0e0] font-bold text-[14px] px-2 py-1 mb-2 uppercase tracking-wide">OTHER QUALIFICATION</h3>
                     <ul className="list-disc list-inside text-[13px] leading-snug space-y-1 ml-2">
                       {otherQualifications.filter(q => q.trim() !== '').map((q, i) => (
                         <li key={i}>{q}</li>
@@ -649,7 +660,7 @@ export default function ResumeMakerTool() {
                 {/* Work Experience */}
                 {experiencePoints.some(p => p.trim() !== '') && (
                   <div>
-                    <h3 className="bg-[#e0e0e0] font-bold text-[14px] px-2 py-1 mb-2 uppercase">WORK EXPERIENCE</h3>
+                    <h3 className="bg-[#e0e0e0] font-bold text-[14px] px-2 py-1 mb-2 uppercase tracking-wide">WORK EXPERIENCE</h3>
                     <ul className="list-disc list-inside text-[13px] leading-snug space-y-1 ml-2">
                       {experiencePoints.filter(p => p.trim() !== '').map((p, i) => (
                         <li key={i}>{p}</li>
@@ -660,35 +671,35 @@ export default function ResumeMakerTool() {
 
                 {/* Personal Information */}
                 <div>
-                  <h3 className="bg-[#e0e0e0] font-bold text-[14px] px-2 py-1 mb-2 uppercase">PERSONAL INFORMATION</h3>
+                  <h3 className="bg-[#e0e0e0] font-bold text-[14px] px-2 py-1 mb-2 uppercase tracking-wide">PERSONAL INFORMATION</h3>
                   <div className="text-[13px] leading-relaxed">
                     <div className="flex">
-                      <div className="w-40">Father's Name</div>
+                      <div className="w-40 font-semibold">Father's Name</div>
                       <div className="w-4 text-center">:</div>
                       <div className="flex-1">{personalDetails.fatherName || '-'}</div>
                     </div>
                     <div className="flex">
-                      <div className="w-40">Date of Birth</div>
+                      <div className="w-40 font-semibold">Date of Birth</div>
                       <div className="w-4 text-center">:</div>
                       <div className="flex-1">{personalDetails.dob || '-'}</div>
                     </div>
                     <div className="flex">
-                      <div className="w-40">Language Known</div>
+                      <div className="w-40 font-semibold">Language Known</div>
                       <div className="w-4 text-center">:</div>
                       <div className="flex-1">{personalDetails.languages || '-'}</div>
                     </div>
                     <div className="flex">
-                      <div className="w-40">Gender</div>
+                      <div className="w-40 font-semibold">Gender</div>
                       <div className="w-4 text-center">:</div>
                       <div className="flex-1">{personalDetails.gender || '-'}</div>
                     </div>
                     <div className="flex">
-                      <div className="w-40">Nationality</div>
+                      <div className="w-40 font-semibold">Nationality</div>
                       <div className="w-4 text-center">:</div>
                       <div className="flex-1">{personalDetails.nationality || '-'}</div>
                     </div>
                     <div className="flex">
-                      <div className="w-40">Marital Status</div>
+                      <div className="w-40 font-semibold">Marital Status</div>
                       <div className="w-4 text-center">:</div>
                       <div className="flex-1">{personalDetails.maritalStatus || '-'}</div>
                     </div>
@@ -697,7 +708,7 @@ export default function ResumeMakerTool() {
 
                 {/* Declaration */}
                 <div>
-                  <h3 className="bg-[#e0e0e0] font-bold text-[14px] px-2 py-1 mb-2 uppercase">DECLARATION</h3>
+                  <h3 className="bg-[#e0e0e0] font-bold text-[14px] px-2 py-1 mb-2 uppercase tracking-wide">DECLARATION</h3>
                   <p className="text-[13px] leading-snug">
                     I hereby declared that the above information given by me is true to best of my Knowledge.
                   </p>

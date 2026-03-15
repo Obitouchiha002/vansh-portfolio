@@ -11,7 +11,7 @@ interface ToolLayoutProps {
 
 export default function ToolLayout({ title, description, steps, children }: ToolLayoutProps) {
   return (
-    <div className="min-h-screen pt-24 pb-12 px-6 flex flex-col relative overflow-hidden print:pt-0 print:pb-0 print:px-0">
+    <div className="min-h-screen pt-24 pb-12 px-4 sm:px-6 flex flex-col relative overflow-hidden print:pt-0 print:pb-0 print:px-0">
       {/* Background glow */}
       <div className="absolute top-1/4 left-0 w-[500px] h-[500px] bg-neon-blue/5 rounded-full blur-[120px] -z-10 print:hidden" />
       <div className="absolute bottom-1/4 right-0 w-[500px] h-[500px] bg-neon-green/5 rounded-full blur-[120px] -z-10 print:hidden" />
@@ -28,10 +28,10 @@ export default function ToolLayout({ title, description, steps, children }: Tool
           >
             <ArrowLeft size={16} /> Back to Tools
           </a>
-          <h1 className="text-4xl md:text-5xl font-display font-bold mb-4 text-white">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-display font-bold mb-4 text-white">
             {title}
           </h1>
-          <p className="text-xl text-zinc-400 max-w-2xl">
+          <p className="text-lg sm:text-xl text-zinc-400 max-w-2xl">
             {description}
           </p>
         </motion.div>
@@ -41,7 +41,7 @@ export default function ToolLayout({ title, description, steps, children }: Tool
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="w-full bg-zinc-900/50 border border-zinc-800 rounded-2xl p-6 md:p-8 print:border-none print:bg-transparent print:p-0"
+            className="w-full bg-zinc-900/50 border border-zinc-800 rounded-2xl p-4 sm:p-6 md:p-8 print:border-none print:bg-transparent print:p-0"
           >
             {children}
           </motion.div>
@@ -50,7 +50,7 @@ export default function ToolLayout({ title, description, steps, children }: Tool
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="w-full bg-zinc-900/50 border border-zinc-800 rounded-2xl p-6 md:p-8 print:hidden"
+            className="w-full bg-zinc-900/50 border border-zinc-800 rounded-2xl p-4 sm:p-6 md:p-8 print:hidden"
           >
             <h3 className="text-xl font-bold text-zinc-100 mb-6">How to use</h3>
             <ul className="grid sm:grid-cols-2 md:grid-cols-3 gap-6">
