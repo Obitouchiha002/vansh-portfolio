@@ -27,3 +27,16 @@ body {
     radial-gradient(circle at 85% 30%, rgba(0, 229, 255, 0.05) 0%, transparent 50%);
   background-attachment: fixed;
 }
+
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 0;
+  }
+  
+  body {
+    background: white;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}

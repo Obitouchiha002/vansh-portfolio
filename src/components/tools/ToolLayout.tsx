@@ -16,7 +16,7 @@ export default function ToolLayout({ title, description, steps, children }: Tool
       <div className="absolute top-1/4 left-0 w-[500px] h-[500px] bg-neon-blue/5 rounded-full blur-[120px] -z-10 print:hidden" />
       <div className="absolute bottom-1/4 right-0 w-[500px] h-[500px] bg-neon-green/5 rounded-full blur-[120px] -z-10 print:hidden" />
 
-      <div className="max-w-4xl mx-auto w-full flex-1 print:max-w-none print:w-full">
+      <div className="max-w-6xl mx-auto w-full flex-1 print:max-w-none print:w-full">
         <motion.div 
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -36,24 +36,24 @@ export default function ToolLayout({ title, description, steps, children }: Tool
           </p>
         </motion.div>
 
-        <div className="grid md:grid-cols-3 gap-8 print:block print:gap-0">
+        <div className="flex flex-col gap-8 print:block print:gap-0">
           <motion.div 
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="md:col-span-2 bg-zinc-900/50 border border-zinc-800 rounded-2xl p-6 md:p-8 print:border-none print:bg-transparent print:p-0 print:col-span-1"
+            className="w-full bg-zinc-900/50 border border-zinc-800 rounded-2xl p-6 md:p-8 print:border-none print:bg-transparent print:p-0"
           >
             {children}
           </motion.div>
 
           <motion.div 
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="bg-zinc-900/50 border border-zinc-800 rounded-2xl p-6 h-fit print:hidden"
+            className="w-full bg-zinc-900/50 border border-zinc-800 rounded-2xl p-6 md:p-8 print:hidden"
           >
             <h3 className="text-xl font-bold text-zinc-100 mb-6">How to use</h3>
-            <ul className="space-y-4">
+            <ul className="grid sm:grid-cols-2 md:grid-cols-3 gap-6">
               {steps.map((step, idx) => (
                 <li key={idx} className="flex items-start gap-3 text-zinc-400">
                   <CheckCircle size={20} className="text-neon-green shrink-0 mt-0.5" />

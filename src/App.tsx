@@ -97,7 +97,7 @@ export default function App() {
         <Education />
         <Certifications />
         <Projects />
-        <Tools />
+        <Tools isOpen={currentPath === '#/tools'} onClose={() => { window.location.hash = '#/'; }} />
         <YouTube />
         <CareerGoal />
         {/* <Testimonials /> */}

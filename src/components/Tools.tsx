@@ -1,4 +1,5 @@
-import { motion } from 'motion/react';
+import { useEffect } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
 import { 
   FileText, 
   Briefcase, 
@@ -10,11 +11,10 @@ import {
   ArrowRightLeft, 
   Calculator, 
   Type,
-  ArrowLeft,
   Wrench,
   AlignLeft,
-  Scissors,
-  FileDigit
+  FileDigit,
+  X
 } from 'lucide-react';
 
 const toolCategories = [
@@ -68,71 +68,104 @@ const toolCategories = [
   }
 ];
 
-export default function Tools() {
+export default function Tools({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isOpen]);
+
   return (
-    <section id="tools" className="py-24 relative overflow-hidden bg-zinc-950">
-      {/* Background glow */}
-      <div className="absolute top-1/4 left-0 w-[500px] h-[500px] bg-neon-blue/5 rounded-full blur-[120px] -z-10" />
-      <div className="absolute bottom-1/4 right-0 w-[500px] h-[500px] bg-neon-green/5 rounded-full blur-[120px] -z-10" />
-
-      <div className="max-w-7xl mx-auto px-6 w-full flex-1">
-        <motion.div 
-          initial={{ opacity: 0, y: -20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="mb-12"
-        >
-          <h2 className="text-3xl md:text-5xl font-display font-bold mb-4">
-            Free <span className="text-neon-blue">Tools</span>
-          </h2>
-          <div className="w-20 h-1 bg-neon-blue rounded-full mb-6" />
-          <p className="text-xl text-zinc-400 max-w-2xl">
-            A collection of handy utilities and tools to help you with your daily tasks, from resume building to file conversion.
-          </p>
-        </motion.div>
-
-        <div className="grid md:grid-cols-2 gap-8">
-          {toolCategories.map((category, idx) => (
-            <motion.div
-              key={category.title}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: idx * 0.1 }}
-              className="bg-zinc-900/50 border border-zinc-800 rounded-2xl p-6 md:p-8 hover:border-zinc-700 transition-colors"
-            >
-              <div className="flex items-center gap-4 mb-6">
-                <div className={`p-3 rounded-xl bg-zinc-950 border border-zinc-800 shadow-lg`}>
-                  {category.icon}
+    <AnimatePresence>
+      {isOpen && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-8">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={onClose}
+            className="absolute inset-0 bg-zinc-950/90 backdrop-blur-sm"
+          />
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.9, y: 20 }}
+            className="relative w-full max-w-5xl bg-zinc-900 border border-zinc-800 rounded-3xl overflow-hidden shadow-2xl flex flex-col max-h-[90vh]"
+          >
+            <div className="p-6 border-b border-zinc-800 flex items-center justify-between bg-zinc-900/50 backdrop-blur-md shrink-0">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-lg bg-zinc-950 flex items-center justify-center border border-neon-blue/30">
+                  <Wrench className="text-neon-blue" size={20} />
                 </div>
-                <h2 className="text-2xl font-bold text-zinc-100">{category.title}</h2>
+                <h3 className="font-display font-bold text-zinc-100 text-xl">Free Tools</h3>
+              </div>
+              <button 
+                onClick={onClose}
+                className="p-2 hover:bg-zinc-800 rounded-full text-zinc-400 hover:text-zinc-100 transition-colors"
+              >
+                <X size={24} />
+              </button>
+            </div>
+            
+            <div className="p-6 md:p-8 overflow-y-auto bg-zinc-950 relative">
+              {/* Background glow */}
+              <div className="absolute top-0 left-0 w-[300px] h-[300px] bg-neon-blue/5 rounded-full blur-[100px] -z-10" />
+              <div className="absolute bottom-0 right-0 w-[300px] h-[300px] bg-neon-green/5 rounded-full blur-[100px] -z-10" />
+
+              <div className="mb-8">
+                <p className="text-zinc-400 max-w-2xl">
+                  A collection of handy utilities and tools to help you with your daily tasks, from resume building to file conversion.
+                </p>
               </div>
 
-              <div className="grid sm:grid-cols-2 gap-4">
-                {category.tools.map((tool, toolIdx) => (
-                  <motion.a
-                    key={tool.name}
-                    href={tool.href}
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    className="flex flex-col items-start p-4 rounded-xl bg-zinc-950 border border-zinc-800 hover:border-zinc-600 transition-colors text-left group"
+              <div className="grid md:grid-cols-2 gap-6">
+                {toolCategories.map((category, idx) => (
+                  <motion.div
+                    key={category.title}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: idx * 0.1 }}
+                    className="bg-zinc-900/50 border border-zinc-800 rounded-2xl p-6 hover:border-zinc-700 transition-colors"
                   >
-                    <div className={`text-zinc-400 group-hover:text-${category.color} transition-colors mb-3`}>
-                      {tool.icon}
+                    <div className="flex items-center gap-4 mb-6">
+                      <div className={`p-3 rounded-xl bg-zinc-950 border border-zinc-800 shadow-lg`}>
+                        {category.icon}
+                      </div>
+                      <h2 className="text-xl font-bold text-zinc-100">{category.title}</h2>
                     </div>
-                    <h3 className="font-bold text-zinc-200 mb-1 group-hover:text-white transition-colors">
-                      {tool.name}
-                    </h3>
-                    <p className="text-xs text-zinc-500 line-clamp-2">
-                      {tool.description}
-                    </p>
-                  </motion.a>
+
+                    <div className="grid sm:grid-cols-2 gap-4">
+                      {category.tools.map((tool) => (
+                        <a
+                          key={tool.name}
+                          href={tool.href}
+                          onClick={onClose}
+                          className="flex flex-col items-start p-4 rounded-xl bg-zinc-950 border border-zinc-800 hover:border-zinc-600 transition-colors text-left group"
+                        >
+                          <div className={`text-zinc-400 group-hover:text-${category.color} transition-colors mb-3`}>
+                            {tool.icon}
+                          </div>
+                          <h3 className="font-bold text-zinc-200 mb-1 group-hover:text-white transition-colors text-sm">
+                            {tool.name}
+                          </h3>
+                          <p className="text-xs text-zinc-500 line-clamp-2">
+                            {tool.description}
+                          </p>
+                        </a>
+                      ))}
+                    </div>
+                  </motion.div>
                 ))}
               </div>
-            </motion.div>
-          ))}
+            </div>
+          </motion.div>
         </div>
-      </div>
-    </section>
+      )}
+    </AnimatePresence>
   );
 }
