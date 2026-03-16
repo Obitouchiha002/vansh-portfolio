@@ -6,6 +6,7 @@
   
   --color-neon-green: #00ff9d;
   --color-neon-blue: #00e5ff;
+  --color-neon-cyan: #00eee2;
 }
 
 @layer utilities {
@@ -14,6 +15,12 @@
   }
   .box-glow {
     box-shadow: 0 0 20px rgba(0, 255, 157, 0.2);
+  }
+  .box-glow-cyan {
+    box-shadow: 0 0 20px rgba(0, 238, 226, 0.3);
+  }
+  .box-glow-cyan-hover:hover {
+    box-shadow: 0 0 30px rgba(0, 238, 226, 0.5);
   }
   .box-glow-hover:hover {
     box-shadow: 0 0 30px rgba(0, 255, 157, 0.4);

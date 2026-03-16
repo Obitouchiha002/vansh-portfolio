@@ -68,6 +68,8 @@ export default function Navbar() {
               className={
                 item.name === 'Resume'
                   ? "text-sm font-bold text-zinc-950 bg-neon-green px-4 py-2 rounded-lg hover:bg-neon-green/90 active:bg-neon-green/80 transition-colors box-glow-hover"
+                  : item.name === 'Tools'
+                  ? "text-sm font-bold text-zinc-950 bg-neon-cyan px-4 py-2 rounded-lg hover:bg-neon-cyan/90 active:bg-neon-cyan/80 transition-all box-glow-cyan box-glow-cyan-hover"
                   : "text-sm font-medium text-zinc-400 hover:text-neon-green active:text-neon-green/80 transition-colors whitespace-nowrap"
               }
             >
@@ -129,7 +131,10 @@ export default function Navbar() {
             className="absolute top-full left-0 right-0 bg-zinc-950 border-b border-zinc-800/50 overflow-hidden md:hidden"
           >
             <div className="p-6 flex flex-col gap-4">
-              {navItems.map((item) => (
+              {[
+                ...navItems.filter(item => item.name !== 'Tools' && item.name !== 'Resume'),
+                ...navItems.filter(item => item.name === 'Tools' || item.name === 'Resume')
+              ].map((item) => (
                 <a
                   key={item.name}
                   href={getHref(item.href)}
@@ -137,6 +142,8 @@ export default function Navbar() {
                   className={
                     item.name === 'Resume'
                       ? "text-lg font-bold text-zinc-950 bg-neon-green px-4 py-3 rounded-lg text-center hover:bg-neon-green/90 active:bg-neon-green/80 transition-colors"
+                      : item.name === 'Tools'
+                      ? "text-lg font-bold text-zinc-950 bg-neon-cyan px-4 py-3 rounded-lg text-center hover:bg-neon-cyan/90 active:bg-neon-cyan/80 transition-all box-glow-cyan"
                       : "text-lg font-medium text-zinc-300 hover:text-neon-green active:text-neon-green/80 transition-colors"
                   }
                 >
