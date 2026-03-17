@@ -14,6 +14,7 @@ import Footer from './components/Footer';
 import ResumeViewer from './components/ResumeViewer';
 import Tools from './components/Tools';
 import ToolRoute from './components/tools/ToolRoute';
+import Chatbot from './components/Chatbot';
 
 export default function App() {
   const [currentPath, setCurrentPath] = useState(window.location.hash || '#/');
@@ -71,6 +72,7 @@ export default function App() {
         <div className="print:hidden"><Navbar /></div>
         <ResumeViewer />
         <div className="print:hidden"><Footer /></div>
+        <div className="print:hidden"><Chatbot /></div>
       </div>
     );
   }
@@ -83,6 +85,7 @@ export default function App() {
         <div className="print:hidden"><Navbar /></div>
         <ToolRoute path={routePath} />
         <div className="print:hidden"><Footer /></div>
+        <div className="print:hidden"><Chatbot /></div>
       </div>
     );
   }
@@ -104,6 +107,7 @@ export default function App() {
         <Contact />
       </main>
       <Footer />
+      <Chatbot />
     </div>
   );
 }
