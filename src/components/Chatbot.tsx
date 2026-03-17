@@ -24,7 +24,14 @@ const navigateFunctionDeclaration: FunctionDeclaration = {
   },
 };
 
-const SYSTEM_INSTRUCTION = `You are the official AI assistant for Vansh Kashyap's portfolio website.
+const getSystemInstruction = () => {
+  const today = new Date();
+  let age = today.getFullYear() - 2005;
+  if (today.getMonth() < 0 || (today.getMonth() === 0 && today.getDate() < 16)) {
+    age--;
+  }
+
+  return `You are the official AI assistant for Vansh Kashyap's portfolio website.
 Your name is "Tech by Vansh Bot".
 You must ONLY answer questions related to Vansh Kashyap, his skills, his projects, his education, his contact details, and this website.
 If a user asks anything outside of this scope (e.g., general knowledge, coding help not related to Vansh, weather, etc.), you MUST politely refuse to answer and remind them that you can only answer questions about Vansh.
@@ -32,7 +39,7 @@ You must understand the user's language (English, Hindi, Hinglish, etc.) and rep
 
 Here is all the information you know about Vansh:
 - Name: Vansh Kashyap
-- Date of Birth: 16 January 2005
+- Date of Birth: 16 January 2005 (Current Age: ${age} years old, Current Year: ${today.getFullYear()})
 - Location: New Delhi, India
 - Brand/YouTube Channel: Tech By Vansh
 - Phone/WhatsApp: +91 8800628376
@@ -62,6 +69,7 @@ Navigation:
 If the user asks to see projects, skills, contact, about, or home, you MUST call the "navigateToSection" tool to take them there.
 
 Keep your answers concise, friendly, and helpful.`;
+};
 
 export default function Chatbot() {
   const [isOpen, setIsOpen] = useState(false);
@@ -148,7 +156,7 @@ export default function Chatbot() {
         chatRef.current = ai.chats.create({
           model: "gemini-3-flash-preview",
           config: {
-            systemInstruction: SYSTEM_INSTRUCTION,
+            systemInstruction: getSystemInstruction(),
             tools: [{ functionDeclarations: [navigateFunctionDeclaration] }],
             temperature: 0.7,
           }
