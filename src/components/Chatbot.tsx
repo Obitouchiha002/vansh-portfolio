@@ -65,6 +65,9 @@ Skills:
 About Vansh:
 He is a young learner from Delhi, deeply passionate about technology, computers, and digital creation. He has a strong interest in computer hardware, networking, and troubleshooting. He loves diagnosing PC issues, optimizing performance, and helping others get the most out of their machines, especially low-end setups. He combines technical skills with creative vision to produce engaging tech tutorials and digital content.
 
+Notable Projects:
+- VanshLink: Connect instantly, chat privately. Your conversations, your control. (App) Link: https://vanshlink.vercel.app/
+
 Navigation:
 If the user asks to see projects, skills, contact, about, or home, you MUST call the "navigateToSection" tool to take them there.
 
@@ -119,6 +122,8 @@ export default function Chatbot() {
       } else if (lowerInput.includes('project') || lowerInput.includes('portfolio')) {
         window.location.hash = '#projects';
         return "Taking you to the Projects section!";
+      } else if (lowerInput.includes('vanshlink') || lowerInput.includes('app')) {
+        return "VanshLink: Connect instantly, chat privately. Your conversations, your control. You can check it out here: https://vanshlink.vercel.app/";
       } else if (lowerInput.includes('contact') || lowerInput.includes('hire') || lowerInput.includes('email')) {
         window.location.hash = '#contact';
         return "Taking you to the Contact section!";

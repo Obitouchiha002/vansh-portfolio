@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from 'motion/react';
-import { ExternalLink, Play, Image as ImageIcon, Code, PenTool, Layout } from 'lucide-react';
+import { ExternalLink, Play, Image as ImageIcon, Code, PenTool, Layout, Smartphone } from 'lucide-react';
 import { useState } from 'react';
 import ThumbnailsGallery from './ThumbnailsGallery';
 import GameTestingGallery from './GameTestingGallery';
@@ -117,6 +117,16 @@ const projects: (ProjectDetails & { icon: any, link?: string, isGallery?: boolea
     isGamingSolutionsGallery: true,
   },
 
+  // App
+  {
+    title: 'VanshLink',
+    category: 'App',
+    icon: Smartphone,
+    image: '/vanshlink-thumbnail.svg',
+    description: 'Connect instantly, chat privately. Your conversations, your control.',
+    link: 'https://vanshlink.vercel.app/',
+  },
+
   // Other
   {
     title: 'My Resume',
@@ -128,7 +138,7 @@ const projects: (ProjectDetails & { icon: any, link?: string, isGallery?: boolea
   },
 ];
 
-const categories = ['YouTube', 'Graphic Design', 'Video Editing', 'Other'];
+const categories = ['YouTube', 'Graphic Design', 'Video Editing', 'App', 'Other'];
 
 export default function Projects() {
   const [activeCategory, setActiveCategory] = useState('YouTube');
