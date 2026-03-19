@@ -4,10 +4,11 @@ import { useState } from 'react';
 import ThumbnailsGallery from './ThumbnailsGallery';
 import GameTestingGallery from './GameTestingGallery';
 import GamingSolutionsGallery from './GamingSolutionsGallery';
+import PosterGallery from './PosterGallery';
 import ResumeModal from './ResumeModal';
 import ProjectDetailModal, { ProjectDetails } from './ProjectDetailModal';
 
-const projects: (ProjectDetails & { icon: any, link?: string, isGallery?: boolean, isGameGallery?: boolean, isGamingSolutionsGallery?: boolean, isResumeGallery?: boolean })[] = [
+const projects: (ProjectDetails & { icon: any, link?: string, isGallery?: boolean, isGameGallery?: boolean, isGamingSolutionsGallery?: boolean, isResumeGallery?: boolean, isPosterGallery?: boolean })[] = [
   // YouTube
   {
     title: 'YouTube Thumbnails',
@@ -23,6 +24,7 @@ const projects: (ProjectDetails & { icon: any, link?: string, isGallery?: boolea
     icon: PenTool,
     image: '/poster-design-thumbnail.png',
     description: 'Creative and engaging poster designs for events, marketing, and branding.',
+    isPosterGallery: true,
   },
   {
     title: 'Logos',
@@ -126,6 +128,14 @@ const projects: (ProjectDetails & { icon: any, link?: string, isGallery?: boolea
     description: 'Connect instantly, chat privately. Your conversations, your control.',
     link: 'https://vanshlink.vercel.app/',
   },
+  {
+    title: 'vthumb',
+    category: 'App',
+    icon: ImageIcon,
+    image: '/vthumb-thumbnail.svg',
+    description: 'Youtube thumbnail Downloads',
+    link: 'https://vthumb.vercel.app/',
+  },
 
   // Other
   {
@@ -145,6 +155,7 @@ export default function Projects() {
   const [isGalleryOpen, setIsGalleryOpen] = useState(false);
   const [isGameGalleryOpen, setIsGameGalleryOpen] = useState(false);
   const [isGamingSolutionsGalleryOpen, setIsGamingSolutionsGalleryOpen] = useState(false);
+  const [isPosterGalleryOpen, setIsPosterGalleryOpen] = useState(false);
   const [isResumeModalOpen, setIsResumeModalOpen] = useState(false);
   const [selectedProject, setSelectedProject] = useState<ProjectDetails | null>(null);
 
@@ -259,6 +270,13 @@ export default function Projects() {
                       >
                         View Gallery <ExternalLink size={16} />
                       </button>
+                    ) : project.isPosterGallery ? (
+                      <button 
+                        onClick={() => setIsPosterGalleryOpen(true)}
+                        className="text-sm font-medium text-zinc-300 hover:text-neon-green flex items-center gap-2 transition-colors"
+                      >
+                        View Gallery <ExternalLink size={16} />
+                      </button>
                     ) : project.isResumeGallery ? (
                       <button 
                         onClick={() => setIsResumeModalOpen(true)}
@@ -293,6 +311,10 @@ export default function Projects() {
       <GamingSolutionsGallery 
         isOpen={isGamingSolutionsGalleryOpen} 
         onClose={() => setIsGamingSolutionsGalleryOpen(false)} 
+      />
+      <PosterGallery 
+        isOpen={isPosterGalleryOpen} 
+        onClose={() => setIsPosterGalleryOpen(false)} 
       />
       <ResumeModal 
         isOpen={isResumeModalOpen} 
