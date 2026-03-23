@@ -68,6 +68,7 @@ He is a young learner from Delhi, deeply passionate about technology, computers,
 Notable Projects:
 - VanshLink: Connect instantly, chat privately. Your conversations, your control. (App) Link: https://vanshlink.vercel.app/
 - vthumb: Youtube thumbnail Downloads (App) Link: https://vthumb.vercel.app/
+- Aura Shakti: Find your aura (App) Link: https://aurashakti.vercel.app/
 
 Navigation:
 If the user asks to see projects, skills, contact, about, or home, you MUST call the "navigateToSection" tool to take them there.
@@ -127,8 +128,10 @@ export default function Chatbot() {
         return "VanshLink: Connect instantly, chat privately. Your conversations, your control. You can check it out here: https://vanshlink.vercel.app/";
       } else if (lowerInput.includes('vthumb')) {
         return "vthumb: Youtube thumbnail Downloads. You can check it out here: https://vthumb.vercel.app/";
+      } else if (lowerInput.includes('aura shakti') || lowerInput.includes('aurashakti')) {
+        return "Aura Shakti: Find your aura. You can check it out here: https://aurashakti.vercel.app/";
       } else if (lowerInput.includes('app')) {
-        return "Vansh has built apps like VanshLink (a chat app) and vthumb (a YouTube thumbnail downloader). You can find them in the Projects section!";
+        return "Vansh has built apps like VanshLink (a chat app), vthumb (a YouTube thumbnail downloader), and Aura Shakti. You can find them in the Projects section!";
       } else if (lowerInput.includes('contact') || lowerInput.includes('hire') || lowerInput.includes('email')) {
         window.location.hash = '#contact';
         return "Taking you to the Contact section!";

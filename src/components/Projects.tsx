@@ -136,6 +136,14 @@ const projects: (ProjectDetails & { icon: any, link?: string, isGallery?: boolea
     description: 'Youtube thumbnail Downloads',
     link: 'https://vthumb.vercel.app/',
   },
+  {
+    title: 'Aura Shakti',
+    category: 'App',
+    icon: Smartphone,
+    image: '/aurashakti-thumbnail.svg',
+    description: 'Find your aura',
+    link: 'https://aurashakti.vercel.app/',
+  },
 
   // Other
   {
