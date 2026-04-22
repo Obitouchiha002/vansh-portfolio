@@ -2,8 +2,33 @@ import { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { Youtube, PlayCircle, TrendingUp, Users, Play, Eye } from 'lucide-react';
 
+const OptimizedYoutubeImage = ({ src, alt, className }: { src: string, alt: string, className: string }) => {
+  const [isLoaded, setIsLoaded] = useState(false);
+  
+  return (
+    <div className="absolute inset-0 bg-zinc-900 border border-zinc-800">
+      {!isLoaded && (
+        <div className="absolute inset-0 bg-zinc-800 animate-pulse" />
+      )}
+      <img 
+        src={src} 
+        alt={alt} 
+        loading="lazy"
+        decoding="async"
+        onLoad={() => setIsLoaded(true)}
+        className={`${className} ${isLoaded ? 'opacity-100' : 'opacity-0'} transition-opacity duration-300 w-full h-full object-cover`}
+        referrerPolicy="no-referrer"
+      />
+    </div>
+  );
+};
+
 export default function YouTube() {
-  const [stats, setStats] = useState<{ subscribers: string; views: string } | null>(null);
+  // Default fallback values
+  const [stats, setStats] = useState<{ subscribers: string; views: string }>({
+    subscribers: "447",
+    views: "264.0K"
+  });
 
   useEffect(() => {
     const fetchStats = async () => {
@@ -17,7 +42,8 @@ export default function YouTube() {
           });
         }
       } catch (error) {
-        console.error('Failed to fetch YouTube stats:', error);
+        // Silently use fallback stats if the API is not configured or blocked
+        console.warn('Using fallback YouTube stats because API is missing or blocked.');
       }
     };
 
@@ -96,18 +122,16 @@ export default function YouTube() {
               whileTap={{ scale: 0.95 }}
               className="aspect-video rounded-2xl overflow-hidden border-2 border-zinc-800 shadow-2xl relative group cursor-pointer"
             >
-              <img 
+              <OptimizedYoutubeImage 
                 src="https://i.ytimg.com/vi/5b5W3Sq-OxY/maxresdefault.jpg" 
                 alt="GTA V Low End PC Optimization" 
-                loading="lazy"
-                className="w-full h-full object-cover group-hover:scale-105 group-active:scale-105 transition-transform duration-700"
-                referrerPolicy="no-referrer"
+                className="group-hover:scale-105 group-active:scale-105 transition-transform duration-700"
               />
               <a 
                 href="https://youtu.be/5b5W3Sq-OxY"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="absolute inset-0 bg-zinc-950/40 group-hover:bg-zinc-950/20 group-active:bg-zinc-950/20 transition-colors flex items-center justify-center"
+                className="absolute inset-0 bg-zinc-950/40 group-hover:bg-zinc-950/20 group-active:bg-zinc-950/20 transition-colors flex items-center justify-center z-10"
               >
                 <div className="w-20 h-20 bg-red-600 rounded-full flex items-center justify-center shadow-[0_0_30px_rgba(220,38,38,0.6)] group-hover:scale-110 group-active:scale-110 transition-transform">
                   <Play className="text-white ml-2" size={32} fill="currentColor" />

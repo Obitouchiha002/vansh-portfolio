@@ -2,6 +2,29 @@ import { motion, AnimatePresence } from 'motion/react';
 import { X, Maximize2 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
+const OptimizedImage = ({ src, alt, className }: { src: string, alt: string, className: string }) => {
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [hasError, setHasError] = useState(false);
+
+  return (
+    <div className="relative w-full h-full overflow-hidden bg-zinc-900">
+      {!isLoaded && !hasError && (
+        <div className="absolute inset-0 bg-zinc-800 animate-pulse" />
+      )}
+      <img 
+        src={src} 
+        alt={alt} 
+        loading="lazy"
+        decoding="async"
+        onLoad={() => setIsLoaded(true)}
+        onError={() => setHasError(true)}
+        className={`${className} ${isLoaded ? 'opacity-100' : 'opacity-0'} transition-opacity duration-300`}
+        referrerPolicy="no-referrer"
+      />
+    </div>
+  );
+};
+
 // Aap yahan apne high-quality thumbnails add kar sakte hain
 const thumbnailsData = [
   {
@@ -130,12 +153,10 @@ export default function ThumbnailsGallery({ isOpen, onClose }: { isOpen: boolean
                   onClick={() => setActiveImage(item.image)}
                 >
                   <div className="aspect-video overflow-hidden relative">
-                    <img 
+                    <OptimizedImage 
                       src={item.image.replace('maxresdefault.jpg', 'hqdefault.jpg')} 
                       alt={item.title} 
-                      loading="lazy"
                       className="w-full h-full object-cover transform group-hover:scale-105 group-active:scale-105 transition-transform duration-700"
-                      referrerPolicy="no-referrer"
                     />
                     <div className="absolute inset-0 bg-zinc-950/40 opacity-0 group-hover:opacity-100 group-active:opacity-100 transition-opacity flex items-center justify-center">
                       <div className="w-16 h-16 bg-zinc-900/80 backdrop-blur-sm rounded-full flex items-center justify-center shadow-xl group-hover:scale-110 group-active:scale-110 transition-transform border border-zinc-700">

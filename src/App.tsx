@@ -4,10 +4,10 @@ import Hero from './components/Hero';
 import About from './components/About';
 import Skills from './components/Skills';
 import Education from './components/Education';
+import Experience from './components/Experience';
 import Certifications from './components/Certifications';
 import Projects from './components/Projects';
 import YouTube from './components/YouTube';
-import CareerGoal from './components/CareerGoal';
 import Testimonials from './components/Testimonials';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
@@ -98,11 +98,11 @@ export default function App() {
         <About />
         <Skills />
         <Education />
+        <Experience />
         <Certifications />
         <Projects />
         <Tools isOpen={currentPath === '#/tools'} onClose={() => { window.location.hash = '#/'; }} />
         <YouTube />
-        <CareerGoal />
         {/* <Testimonials /> */}
         <Contact />
       </main>

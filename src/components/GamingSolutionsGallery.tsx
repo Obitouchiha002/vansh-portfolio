@@ -2,6 +2,29 @@ import { motion, AnimatePresence } from 'motion/react';
 import { X, Play } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
+const OptimizedImage = ({ src, alt, className }: { src: string, alt: string, className: string }) => {
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [hasError, setHasError] = useState(false);
+
+  return (
+    <div className="relative w-full h-full overflow-hidden bg-zinc-900">
+      {!isLoaded && !hasError && (
+        <div className="absolute inset-0 bg-zinc-800 animate-pulse" />
+      )}
+      <img 
+        src={src} 
+        alt={alt} 
+        loading="lazy"
+        decoding="async"
+        onLoad={() => setIsLoaded(true)}
+        onError={() => setHasError(true)}
+        className={`${className} ${isLoaded ? 'opacity-100' : 'opacity-0'} transition-opacity duration-300`}
+        referrerPolicy="no-referrer"
+      />
+    </div>
+  );
+};
+
 const gamingSolutionsData = [
   {
     id: 1,
@@ -102,11 +125,10 @@ export default function GamingSolutionsGallery({ isOpen, onClose }: { isOpen: bo
                   onClick={() => setActiveVideo(item.videoId)}
                 >
                   <div className="aspect-video overflow-hidden relative">
-                    <img 
+                    <OptimizedImage 
                       src={item.image} 
                       alt={item.title} 
                       className="w-full h-full object-cover transform group-hover:scale-105 group-active:scale-105 transition-transform duration-700"
-                      referrerPolicy="no-referrer"
                     />
                     <div className="absolute inset-0 bg-zinc-950/40 group-hover:bg-zinc-950/20 group-active:bg-zinc-950/20 transition-colors flex items-center justify-center">
                       <div className="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center shadow-[0_0_30px_rgba(220,38,38,0.6)] group-hover:scale-110 group-active:scale-110 transition-transform">

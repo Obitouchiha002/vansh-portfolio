@@ -1,8 +1,12 @@
 import "dotenv/config";
 import express from "express";
-import { createServer as createViteServer } from "vite";
 import archiver from "archiver";
 import path from "path";
+import fs from "fs";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 async function startServer() {
   const app = express();
@@ -24,13 +28,13 @@ async function startServer() {
 
     // Add all files in the current directory, ignoring node_modules, dist, and .git
     archive.glob("**/*", {
-      cwd: process.cwd(),
+      cwd: __dirname,
       ignore: ["node_modules/**", "dist/**", ".git/**", ".env*"]
     });
     
     // Also include hidden files like .env.example, .gitignore
     archive.glob(".*", {
-      cwd: process.cwd(),
+      cwd: __dirname,
       ignore: ["node_modules/**", "dist/**", ".git/**", ".env", ".env.local", ".env.development", ".env.production"]
     });
 
@@ -68,18 +72,37 @@ async function startServer() {
     }
   });
 
-  // Vite middleware for development
-  if (process.env.NODE_ENV !== "production") {
+  // Vite middleware for development or fallback
+  const isProduction = process.env.NODE_ENV === "production" || process.env.K_SERVICE !== undefined;
+  const distPath = path.join(__dirname, "dist");
+  const hasBuild = fs.existsSync(path.join(distPath, "index.html"));
+  
+  if (!isProduction || !hasBuild) {
+    if (isProduction && !hasBuild) {
+      console.warn("Warning: dist/index.html is missing in production. Falling back to Vite dev server.");
+    }
+    const { createServer: createViteServer } = await import("vite");
     const vite = await createViteServer({
       server: { middlewareMode: true },
       appType: "spa",
     });
     app.use(vite.middlewares);
   } else {
-    const distPath = path.join(process.cwd(), "dist");
     app.use(express.static(distPath));
+    const indexPath = path.join(distPath, "index.html");
+    let indexHtml = "";
+    try {
+      indexHtml = fs.readFileSync(indexPath, "utf8");
+    } catch (e) {
+      console.warn("Could not read index.html synchronously", e);
+    }
     app.get("*", (req, res) => {
-      res.sendFile(path.join(distPath, "index.html"));
+      if (indexHtml) {
+        res.setHeader("Content-Type", "text/html");
+        res.send(indexHtml);
+      } else {
+        res.sendFile(indexPath);
+      }
     });
   }
 

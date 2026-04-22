@@ -67,15 +67,33 @@ export default function About() {
             className="md:col-span-7"
           >
             <div className="prose prose-invert prose-zinc max-w-none">
-              <p className="text-xl text-zinc-300 leading-relaxed mb-6">
-                I am a young learner from Delhi, deeply passionate about technology, computers, and digital creation. My journey started with a curiosity about how things work, which quickly evolved into a dedicated pursuit of technical knowledge.
-              </p>
-              <p className="text-lg text-zinc-400 leading-relaxed mb-6">
-                I have a strong interest in computer hardware, networking, and troubleshooting. I love diagnosing PC issues, optimizing performance, and helping others get the most out of their machines, especially low-end setups.
-              </p>
-              <p className="text-lg text-zinc-400 leading-relaxed">
-                Beyond the hardware, I am a creative at heart. I enjoy graphic design, video editing, and content creation. Combining my technical skills with my creative vision allows me to produce engaging tech tutorials and digital content that simplifies complex concepts for everyday users.
-              </p>
+              <motion.p 
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 0.5 }}
+                className="text-xl text-zinc-300 leading-relaxed mb-6"
+              >
+                I'm a young <span className="text-white font-semibold inline-flex items-center bg-zinc-800/80 px-2 py-0.5 rounded-md border border-zinc-700 shadow-sm mx-1">tech enthusiast</span> from Delhi with a strong passion for computers, technology, and digital creation. What started as simple curiosity about how things work has grown into a deep interest in learning and building in the tech space.
+              </motion.p>
+              <motion.p 
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 0.6 }}
+                className="text-lg text-zinc-400 leading-relaxed mb-6"
+              >
+                I'm especially interested in computer hardware, networking, and troubleshooting. I enjoy diagnosing issues, improving system performance, and helping people get the best out of their machines—especially when working with <span className="text-neon-green/90 font-medium">low-end setups</span>.
+              </motion.p>
+              <motion.p 
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 0.7 }}
+                className="text-lg text-zinc-400 leading-relaxed"
+              >
+                Beyond the technical side, I'm also creatively driven. I love <span className="text-white font-medium">graphic design</span>, <span className="text-white font-medium">video editing</span>, and content creation. By combining my technical knowledge with creativity, I aim to create engaging tech content and tutorials that make complex ideas simple and useful for everyday users.
+              </motion.p>
             </div>
           </motion.div>
         </div>

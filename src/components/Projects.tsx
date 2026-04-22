@@ -1,14 +1,43 @@
 import { motion, AnimatePresence } from 'motion/react';
 import { ExternalLink, Play, Image as ImageIcon, Code, PenTool, Layout, Smartphone } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import ThumbnailsGallery from './ThumbnailsGallery';
 import GameTestingGallery from './GameTestingGallery';
 import GamingSolutionsGallery from './GamingSolutionsGallery';
 import PosterGallery from './PosterGallery';
 import ResumeModal from './ResumeModal';
+import IframeModal from './IframeModal';
 import ProjectDetailModal, { ProjectDetails } from './ProjectDetailModal';
 
-const projects: (ProjectDetails & { icon: any, link?: string, isGallery?: boolean, isGameGallery?: boolean, isGamingSolutionsGallery?: boolean, isResumeGallery?: boolean, isPosterGallery?: boolean })[] = [
+const OptimizedImage = ({ src, alt, className, priority = false }: { src: string, alt: string, className: string, priority?: boolean }) => {
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [imgSrc, setImgSrc] = useState(src);
+  const [hasError, setHasError] = useState(false);
+
+  return (
+    <div className="relative w-full h-full overflow-hidden bg-zinc-900/50">
+      {!isLoaded && !hasError && (
+        <div className="absolute inset-0 bg-zinc-800/80 animate-pulse" />
+      )}
+      <img 
+        src={imgSrc} 
+        alt={alt} 
+        loading={priority ? "eager" : "lazy"}
+        fetchPriority={priority ? "high" : "auto"}
+        decoding="async"
+        onLoad={() => setIsLoaded(true)}
+        onError={() => {
+          setHasError(true);
+          setImgSrc(`https://picsum.photos/seed/${alt.replace(/\s+/g, '')}/800/600`);
+        }}
+        className={`${className} ${isLoaded ? 'opacity-100' : 'opacity-0'} transition-opacity duration-300`}
+        referrerPolicy="no-referrer"
+      />
+    </div>
+  );
+};
+
+const projects: (ProjectDetails & { icon: any, link?: string, iframeUrl?: string, isGallery?: boolean, isGameGallery?: boolean, isGamingSolutionsGallery?: boolean, isResumeGallery?: boolean, isPosterGallery?: boolean })[] = [
   // YouTube
   {
     title: 'YouTube Thumbnails',
@@ -127,24 +156,82 @@ const projects: (ProjectDetails & { icon: any, link?: string, isGallery?: boolea
     image: '/vanshlink-thumbnail.svg',
     description: 'Connect instantly, chat privately. Your conversations, your control.',
     link: 'https://vanshlink.vercel.app/',
+    details: {
+      imageOrientation: 'portrait',
+      images: [
+        '/app-screenshots/vanshlink-1.png', 
+        '/app-screenshots/vanshlink-2.png', 
+        '/app-screenshots/vanshlink-3.png',
+        '/app-screenshots/vanshlink-4.png'
+      ],
+      tools: ['React', 'Firebase', 'Tailwind CSS'],
+      problem: 'Need a secure and private chat application without unnecessary tracking.',
+      solution: 'Built a responsive real-time chat application powered by Firebase Auth and Firestore with an emphasis on speed and privacy.',
+      result: 'A fast, secure messaging platform that scales instantly.'
+    }
   },
   {
     title: 'vthumb',
     category: 'App',
     icon: ImageIcon,
     image: '/vthumb-thumbnail.svg',
-    description: 'Youtube thumbnail Downloads',
+    description: 'Youtube thumbnail Downloads instantly.',
     link: 'https://vthumb.vercel.app/',
+    details: {
+      imageOrientation: 'landscape',
+      images: [
+        '/app-screenshots/vthumb-1.png', 
+        '/app-screenshots/vthumb-2.png', 
+        '/app-screenshots/vthumb-3.png'
+      ],
+      tools: ['React', 'YouTube API', 'Tailwind CSS'],
+      problem: 'Content creators find it difficult to analyze or download high-quality thumbnails of existing videos.',
+      solution: 'Created a simple dashboard to instantly fetch and download Max-Res thumbnails just by pasting a YouTube URL.',
+      result: 'Lightning fast tool saving significant time for creators and editors.'
+    }
   },
   {
     title: 'Aura Shakti',
     category: 'App',
     icon: Smartphone,
     image: '/aurashakti-thumbnail.svg',
-    description: 'Find your aura',
+    description: 'Find your true aura based on deep interactive quizzes.',
     link: 'https://aurashakti.vercel.app/',
+    details: {
+      imageOrientation: 'portrait',
+      images: [
+        '/app-screenshots/aurashakti-1.png', 
+        '/app-screenshots/aurashakti-2.png', 
+        '/app-screenshots/aurashakti-3.png',
+        '/app-screenshots/aurashakti-4.png'
+      ],
+      tools: ['React', 'Tailwind CSS', 'Framer Motion'],
+      problem: 'People want entertaining and visually beautiful ways to discover their aura or personality types.',
+      solution: 'Developed a deeply interactive quiz experience with smooth animations, calculating personality metrics to generate abstract "Aura" visualizations.',
+      result: 'An incredibly engaging user experience with high completion rates.'
+    }
   },
-
+  {
+    title: 'Aura Player',
+    category: 'App',
+    icon: Play,
+    image: '/auraplayer-thumbnail.png',
+    description: 'An offline MP3/MP4 player packed with an integrated online music feature.',
+    link: 'https://aura-player-nine.vercel.app/',
+    details: {
+      imageOrientation: 'portrait',
+      images: [
+        '/app-screenshots/auraplayer-1.png', 
+        '/app-screenshots/auraplayer-2.png', 
+        '/app-screenshots/auraplayer-3.png',
+        '/app-screenshots/auraplayer-4.png'
+      ],
+      tools: ['React', 'Tailwind CSS', 'Web Audio API'],
+      problem: 'Users often need multiple standalone apps—one for offline media playback and another for online streaming.',
+      solution: 'Built a sleek, responsive media player combining both offline MP3/MP4 capabilities and robust online music streaming.',
+      result: 'A unified hub delivering an uninterrupted and versatile audio-visual experience.'
+    }
+  },
   // Other
   {
     title: 'My Resume',
@@ -156,16 +243,34 @@ const projects: (ProjectDetails & { icon: any, link?: string, isGallery?: boolea
   },
 ];
 
-const categories = ['YouTube', 'Graphic Design', 'Video Editing', 'App', 'Other'];
+const categories = ['App', 'YouTube', 'Graphic Design', 'Video Editing', 'Other'];
 
 export default function Projects() {
-  const [activeCategory, setActiveCategory] = useState('YouTube');
+  const [activeCategory, setActiveCategory] = useState('App');
   const [isGalleryOpen, setIsGalleryOpen] = useState(false);
   const [isGameGalleryOpen, setIsGameGalleryOpen] = useState(false);
   const [isGamingSolutionsGalleryOpen, setIsGamingSolutionsGalleryOpen] = useState(false);
   const [isPosterGalleryOpen, setIsPosterGalleryOpen] = useState(false);
   const [isResumeModalOpen, setIsResumeModalOpen] = useState(false);
   const [selectedProject, setSelectedProject] = useState<ProjectDetails | null>(null);
+  const [selectedIframeProject, setSelectedIframeProject] = useState<{title: string, url: string} | null>(null);
+
+  useEffect(() => {
+    const handleHashChange = () => {
+      if (window.location.hash === '#apps') {
+        setActiveCategory('App');
+        const el = document.getElementById('projects');
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
+      }
+    };
+    
+    // Check on mount
+    handleHashChange();
+    
+    // Listen for hash changes
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, []);
 
   const filteredProjects = projects.filter(
     (project) => project.category === activeCategory
@@ -209,101 +314,170 @@ export default function Projects() {
           className="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
         >
           <AnimatePresence mode="popLayout">
-            {filteredProjects.map((project, index) => (
-              <motion.div
-                layout
-                key={project.title}
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.9 }}
-                transition={{ duration: 0.4 }}
-                whileTap={{ scale: 0.95 }}
-                className="group relative rounded-2xl overflow-hidden bg-zinc-900 border border-zinc-800 flex flex-col active:border-neon-green/50 transition-colors"
-              >
-                <div className="aspect-video overflow-hidden relative shrink-0">
-                  <div className="absolute inset-0 bg-zinc-950/20 group-hover:bg-transparent group-active:bg-transparent transition-colors z-10" />
-                  <img 
-                    src={project.image} 
-                    alt={project.title} 
-                    loading="lazy"
-                    onError={(e) => {
-                      e.currentTarget.src = `https://picsum.photos/seed/${project.title.replace(/\s+/g, '')}/800/600`;
-                    }}
-                    className="w-full h-full object-cover transform group-hover:scale-105 group-active:scale-105 transition-transform duration-700"
-                    referrerPolicy="no-referrer"
-                  />
-                  <div className="absolute top-4 left-4 z-20 bg-zinc-950/80 backdrop-blur-md p-2 rounded-full border border-zinc-800 flex items-center justify-center">
-                    <project.icon size={16} className="text-neon-green" />
+            {filteredProjects.map((project, index) => {
+              if (project.category === 'App') {
+                return (
+                  <motion.div
+                    layout
+                    key={project.title}
+                    initial={{ opacity: 0, y: 30, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.9 }}
+                    transition={{ duration: 0.4, delay: index * 0.1 }}
+                    whileHover={{ y: -8, scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="group relative rounded-3xl overflow-hidden bg-gradient-to-b from-zinc-800/80 to-zinc-950 border border-zinc-700/50 flex flex-col shadow-[0_8px_30px_rgb(0,0,0,0.4)] hover:shadow-[0_8px_40px_rgba(57,255,20,0.15)] hover:border-neon-green/40 transition-all duration-300"
+                  >
+                    <div className="absolute inset-0 bg-gradient-to-br from-neon-green/5 via-transparent to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                    
+                    {/* Floating App Icon Badge */}
+                    <div className="absolute top-4 right-4 z-20 bg-zinc-900/90 backdrop-blur-xl p-3 rounded-2xl border border-zinc-700/50 shadow-xl group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300">
+                      <project.icon size={24} className="text-neon-green/90 group-hover:text-neon-green transition-colors" />
+                    </div>
+
+                    <div className="aspect-[4/3] overflow-hidden relative shrink-0 p-6 flex items-center justify-center">
+                      <div className="absolute inset-0 bg-zinc-900/40 z-0" />
+                      <div className="relative w-full h-full rounded-xl overflow-hidden shadow-2xl border border-zinc-800/80 group-hover:border-zinc-700/80 transition-colors z-10">
+                        <OptimizedImage 
+                          src={project.image} 
+                          alt={project.title} 
+                          priority={true}
+                          className="w-full h-full object-cover transform scale-100 group-hover:scale-110 group-hover:rotate-1 transition-all duration-700 ease-out"
+                        />
+                      </div>
+                    </div>
+                    
+                    <div className="p-6 pt-2 flex flex-col flex-grow relative z-20">
+                      <div className="flex items-center gap-2 mb-3">
+                        <h3 className="text-2xl font-display font-bold text-transparent bg-clip-text bg-gradient-to-r from-zinc-100 to-zinc-400 group-hover:from-neon-green group-hover:to-zinc-100 transition-all duration-300">
+                          {project.title}
+                        </h3>
+                      </div>
+                      
+                      <p className="text-zinc-400 text-sm leading-relaxed mb-8 flex-grow">
+                        {project.description}
+                      </p>
+                      
+                      <div className="mt-auto grid grid-cols-2 gap-3">
+                        <button 
+                          onClick={() => setSelectedProject(project)}
+                          className="px-4 py-2.5 rounded-xl bg-zinc-800 text-zinc-300 font-medium text-sm flex items-center justify-center gap-2 hover:bg-zinc-700 hover:text-white transition-colors border border-zinc-700"
+                        >
+                          Details
+                        </button>
+                        <a 
+                          href={project.link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="px-4 py-2.5 rounded-xl bg-neon-green/10 text-neon-green font-bold text-sm flex items-center justify-center gap-2 hover:bg-neon-green hover:text-zinc-950 transition-all border border-neon-green/20 hover:border-transparent shadow-[0_0_15px_rgba(57,255,20,0.1)] hover:shadow-[0_0_20px_rgba(57,255,20,0.4)]"
+                        >
+                          Launch <ExternalLink size={16} />
+                        </a>
+                      </div>
+                    </div>
+                  </motion.div>
+                );
+              }
+
+              return (
+                <motion.div
+                  layout
+                  key={project.title}
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.9 }}
+                  transition={{ duration: 0.4 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="group relative rounded-2xl overflow-hidden bg-zinc-900 border border-zinc-800 flex flex-col active:border-neon-green/50 transition-colors"
+                >
+                  <div className="aspect-video overflow-hidden relative shrink-0">
+                    <div className="absolute inset-0 bg-zinc-950/20 group-hover:bg-transparent group-active:bg-transparent transition-colors z-10" />
+                    <OptimizedImage 
+                      src={project.image} 
+                      alt={project.title} 
+                      priority={true}
+                      className="w-full h-full object-cover transform group-hover:scale-105 group-active:scale-105 transition-transform duration-700"
+                    />
+                    <div className="absolute top-4 left-4 z-20 bg-zinc-950/80 backdrop-blur-md p-2 rounded-full border border-zinc-800 flex items-center justify-center">
+                      <project.icon size={16} className="text-neon-green" />
+                    </div>
+                    <div className="absolute top-4 right-4 z-20 bg-zinc-950/80 backdrop-blur-md px-3 py-1 rounded-full border border-zinc-800">
+                      <span className="text-xs font-medium text-zinc-300">{project.category}</span>
+                    </div>
                   </div>
-                  <div className="absolute top-4 right-4 z-20 bg-zinc-950/80 backdrop-blur-md px-3 py-1 rounded-full border border-zinc-800">
-                    <span className="text-xs font-medium text-zinc-300">{project.category}</span>
+                  
+                  <div className="p-6 flex flex-col flex-grow">
+                    <h3 className="text-xl font-display font-bold text-zinc-100 mb-3 group-hover:text-neon-green group-active:text-neon-green transition-colors">
+                      {project.title}
+                    </h3>
+                    <p className="text-zinc-400 text-sm leading-relaxed mb-6 flex-grow">
+                      {project.description}
+                    </p>
+                    <div className="mt-auto">
+                      {project.details ? (
+                        <button 
+                          onClick={() => setSelectedProject(project)}
+                          className="text-sm font-medium text-zinc-300 hover:text-neon-green flex items-center gap-2 transition-colors"
+                        >
+                          View Details <ExternalLink size={16} />
+                        </button>
+                      ) : project.link ? (
+                        <a 
+                          href={project.link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-sm font-medium text-zinc-300 hover:text-neon-green flex items-center gap-2 transition-colors w-fit"
+                        >
+                          View Project <ExternalLink size={16} />
+                        </a>
+                      ) : project.isGallery ? (
+                        <button 
+                          onClick={() => setIsGalleryOpen(true)}
+                          className="text-sm font-medium text-zinc-300 hover:text-neon-green flex items-center gap-2 transition-colors"
+                        >
+                          View Gallery <ExternalLink size={16} />
+                        </button>
+                      ) : project.isGameGallery ? (
+                        <button 
+                          onClick={() => setIsGameGalleryOpen(true)}
+                          className="text-sm font-medium text-zinc-300 hover:text-neon-green flex items-center gap-2 transition-colors"
+                        >
+                          View Gallery <ExternalLink size={16} />
+                        </button>
+                      ) : project.isGamingSolutionsGallery ? (
+                        <button 
+                          onClick={() => setIsGamingSolutionsGalleryOpen(true)}
+                          className="text-sm font-medium text-zinc-300 hover:text-neon-green flex items-center gap-2 transition-colors"
+                        >
+                          View Gallery <ExternalLink size={16} />
+                        </button>
+                      ) : project.isPosterGallery ? (
+                        <button 
+                          onClick={() => setIsPosterGalleryOpen(true)}
+                          className="text-sm font-medium text-zinc-300 hover:text-neon-green flex items-center gap-2 transition-colors"
+                        >
+                          View Gallery <ExternalLink size={16} />
+                        </button>
+                      ) : project.isResumeGallery ? (
+                        <button 
+                          onClick={() => setIsResumeModalOpen(true)}
+                          className="text-sm font-medium text-zinc-300 hover:text-neon-green flex items-center gap-2 transition-colors"
+                        >
+                          View Resume <ExternalLink size={16} />
+                        </button>
+                      ) : (
+                        <button 
+                          onClick={() => setSelectedProject(project)}
+                          className="text-sm font-medium text-zinc-300 hover:text-neon-green flex items-center gap-2 transition-colors"
+                        >
+                          View Details <ExternalLink size={16} />
+                        </button>
+                      )}
+                    </div>
                   </div>
-                </div>
-                
-                <div className="p-6 flex flex-col flex-grow">
-                  <h3 className="text-xl font-display font-bold text-zinc-100 mb-3 group-hover:text-neon-green group-active:text-neon-green transition-colors">
-                    {project.title}
-                  </h3>
-                  <p className="text-zinc-400 text-sm leading-relaxed mb-6 flex-grow">
-                    {project.description}
-                  </p>
-                  <div className="mt-auto">
-                    {project.link ? (
-                      <a 
-                        href={project.link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-sm font-medium text-zinc-300 hover:text-neon-green flex items-center gap-2 transition-colors w-fit"
-                      >
-                        View Project <ExternalLink size={16} />
-                      </a>
-                    ) : project.isGallery ? (
-                      <button 
-                        onClick={() => setIsGalleryOpen(true)}
-                        className="text-sm font-medium text-zinc-300 hover:text-neon-green flex items-center gap-2 transition-colors"
-                      >
-                        View Gallery <ExternalLink size={16} />
-                      </button>
-                    ) : project.isGameGallery ? (
-                      <button 
-                        onClick={() => setIsGameGalleryOpen(true)}
-                        className="text-sm font-medium text-zinc-300 hover:text-neon-green flex items-center gap-2 transition-colors"
-                      >
-                        View Gallery <ExternalLink size={16} />
-                      </button>
-                    ) : project.isGamingSolutionsGallery ? (
-                      <button 
-                        onClick={() => setIsGamingSolutionsGalleryOpen(true)}
-                        className="text-sm font-medium text-zinc-300 hover:text-neon-green flex items-center gap-2 transition-colors"
-                      >
-                        View Gallery <ExternalLink size={16} />
-                      </button>
-                    ) : project.isPosterGallery ? (
-                      <button 
-                        onClick={() => setIsPosterGalleryOpen(true)}
-                        className="text-sm font-medium text-zinc-300 hover:text-neon-green flex items-center gap-2 transition-colors"
-                      >
-                        View Gallery <ExternalLink size={16} />
-                      </button>
-                    ) : project.isResumeGallery ? (
-                      <button 
-                        onClick={() => setIsResumeModalOpen(true)}
-                        className="text-sm font-medium text-zinc-300 hover:text-neon-green flex items-center gap-2 transition-colors"
-                      >
-                        View Resume <ExternalLink size={16} />
-                      </button>
-                    ) : (
-                      <button 
-                        onClick={() => setSelectedProject(project)}
-                        className="text-sm font-medium text-zinc-300 hover:text-neon-green flex items-center gap-2 transition-colors"
-                      >
-                        View Details <ExternalLink size={16} />
-                      </button>
-                    )}
-                  </div>
-                </div>
-              </motion.div>
-            ))}
+                </motion.div>
+              );
+            })}
           </AnimatePresence>
         </motion.div>
       </div>
@@ -332,6 +506,12 @@ export default function Projects() {
         project={selectedProject} 
         isOpen={!!selectedProject} 
         onClose={() => setSelectedProject(null)} 
+      />
+      <IframeModal
+        isOpen={!!selectedIframeProject}
+        onClose={() => setSelectedIframeProject(null)}
+        url={selectedIframeProject?.url || ''}
+        title={selectedIframeProject?.title || ''}
       />
     </section>
   );

@@ -1,14 +1,43 @@
 import { motion, AnimatePresence } from 'motion/react';
-import { X, Wrench, AlertCircle, CheckCircle, Trophy } from 'lucide-react';
-import { useEffect } from 'react';
+import { X, Wrench, AlertCircle, CheckCircle, Trophy, ExternalLink } from 'lucide-react';
+import { useState, useEffect } from 'react';
+
+const OptimizedImage = ({ src, alt, className }: { src: string, alt: string, className: string }) => {
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [imgSrc, setImgSrc] = useState(src);
+  const [hasError, setHasError] = useState(false);
+
+  return (
+    <div className="relative w-full h-full overflow-hidden bg-zinc-900 border border-zinc-800/50">
+      {!isLoaded && !hasError && (
+        <div className="absolute inset-0 bg-zinc-800 animate-pulse" />
+      )}
+      <img 
+        src={imgSrc} 
+        alt={alt} 
+        loading="lazy"
+        decoding="async"
+        onLoad={() => setIsLoaded(true)}
+        onError={() => {
+          setHasError(true);
+          setImgSrc(`https://picsum.photos/seed/${alt.replace(/\s+/g, '')}/800/600`);
+        }}
+        className={`${className} ${isLoaded ? 'opacity-100' : 'opacity-0'} transition-opacity duration-300 w-full h-full`}
+        referrerPolicy="no-referrer"
+      />
+    </div>
+  );
+};
 
 export interface ProjectDetails {
   title: string;
   category: string;
   image: string;
   description: string;
+  link?: string;
   details?: {
     images: string[];
+    imageOrientation?: 'portrait' | 'landscape';
     tools: string[];
     problem: string;
     solution: string;
@@ -62,16 +91,13 @@ export default function ProjectDetailModal({ project, isOpen, onClose }: Project
               </button>
 
               {/* Header Image */}
-              <div className="w-full h-64 md:h-80 relative">
-                <img 
+              <div className="w-full h-64 md:h-80 relative bg-zinc-900 border-b border-zinc-800">
+                <OptimizedImage 
                   src={project.image} 
                   alt={project.title} 
-                  onError={(e) => {
-                    e.currentTarget.src = `https://picsum.photos/seed/${project.title.replace(/\s+/g, '')}/800/600`;
-                  }}
-                  className="w-full h-full object-cover"
+                  className="object-cover"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-zinc-900 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/50 to-transparent" />
                 <div className="absolute bottom-6 left-6 right-6">
                   <span className="px-3 py-1 bg-neon-green/20 text-neon-green border border-neon-green/30 rounded-full text-xs font-medium mb-3 inline-block">
                     {project.category}
@@ -84,11 +110,22 @@ export default function ProjectDetailModal({ project, isOpen, onClose }: Project
 
               {/* Content */}
               <div className="p-6 md:p-8 space-y-10">
-                {/* Description */}
-                <div>
-                  <p className="text-zinc-300 text-lg leading-relaxed">
+                {/* Description and Open App Button */}
+                <div className="flex flex-col md:flex-row md:items-start justify-between gap-6">
+                  <p className="text-zinc-300 text-lg leading-relaxed max-w-2xl">
                     {project.description}
                   </p>
+                  
+                  {project.link && (
+                    <a 
+                      href={project.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-neon-green text-zinc-950 font-bold rounded-xl hover:bg-neon-green/90 transition-colors shadow-[0_0_20px_rgba(57,255,20,0.3)] hover:shadow-[0_0_30px_rgba(57,255,20,0.5)] whitespace-nowrap shrink-0"
+                    >
+                      Open App <ExternalLink size={18} />
+                    </a>
+                  )}
                 </div>
 
                 {project.details ? (
@@ -145,10 +182,10 @@ export default function ProjectDetailModal({ project, isOpen, onClose }: Project
                     {project.details.images && project.details.images.length > 0 && (
                       <div>
                         <h3 className="text-xl font-bold text-white mb-4">Project Gallery</h3>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div className={`grid grid-cols-1 sm:grid-cols-2 ${project.details.imageOrientation === 'portrait' ? 'md:grid-cols-4' : ''} gap-4`}>
                           {project.details.images.map((img, idx) => (
-                            <div key={idx} className="rounded-xl overflow-hidden border border-zinc-800 bg-zinc-950">
-                              <img src={img} alt={`${project.title} screenshot ${idx + 1}`} className="w-full h-auto object-cover hover:scale-105 transition-transform duration-500" />
+                            <div key={idx} className={`rounded-xl overflow-hidden border border-zinc-800 bg-zinc-950 ${project.details.imageOrientation === 'portrait' ? 'aspect-[9/16]' : 'aspect-[4/3]'}`}>
+                              <OptimizedImage src={img} alt={`${project.title} screenshot ${idx + 1}`} className="object-cover hover:scale-105 transition-transform duration-500" />
                             </div>
                           ))}
                         </div>
