@@ -212,6 +212,27 @@ const projects: (ProjectDetails & { icon: any, link?: string, iframeUrl?: string
     }
   },
   {
+    title: 'Kairo',
+    category: 'App',
+    icon: Smartphone,
+    image: '/kairo-thumbnail.png',
+    description: 'Level up every day by completing daily missions designed to improve your social life.',
+    link: 'http://kairo-black.vercel.app/',
+    details: {
+      imageOrientation: 'portrait',
+      images: [
+        '/app-screenshots/kairo-1.png', 
+        '/app-screenshots/kairo-2.png', 
+        '/app-screenshots/kairo-3.png',
+        '/app-screenshots/kairo-4.png'
+      ],
+      tools: ['React', 'Tailwind CSS'],
+      problem: 'People struggle with social anxiety or lack motivation to engage in real-world social interactions.',
+      solution: 'Developed a gamified application that assigns targeted daily missions to encourage social interaction and personal growth.',
+      result: 'A fun and engaging way for users to step out of their comfort zones, build confidence, and level up every day.'
+    }
+  },
+  {
     title: 'Aura Player',
     category: 'App',
     icon: Play,

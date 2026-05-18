@@ -3,14 +3,24 @@ import express from "express";
 import archiver from "archiver";
 import path from "path";
 import fs from "fs";
-import { fileURLToPath } from "url";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 async function startServer() {
   const app = express();
   const PORT = 3000;
+
+  // Determine __dirname based on whether it is running as CJS (compiled) or ESM (dev)
+  const isProduction = process.env.NODE_ENV === "production" || process.env.K_SERVICE !== undefined;
+  let currentDir = "";
+  
+  if (typeof __dirname !== 'undefined') {
+    currentDir = __dirname;
+  } else {
+    // We are in pure ESM dev mode via tsx
+    // Dynamic import to avoid CJS compilation error when using __dirname
+    const url = await import('url');
+    const __filename = url.fileURLToPath(import.meta.url);
+    currentDir = path.dirname(__filename);
+  }
 
   // API route to download source code
   app.get("/api/download-source", (req, res) => {
@@ -26,15 +36,18 @@ async function startServer() {
 
     archive.pipe(res);
 
+    // Provide root dir mapping correctly depending on if it's dist/ or root
+    const rootDir = process.env.NODE_ENV === "production" ? path.join(currentDir, '..') : currentDir;
+
     // Add all files in the current directory, ignoring node_modules, dist, and .git
     archive.glob("**/*", {
-      cwd: __dirname,
+      cwd: rootDir,
       ignore: ["node_modules/**", "dist/**", ".git/**", ".env*"]
     });
     
     // Also include hidden files like .env.example, .gitignore
     archive.glob(".*", {
-      cwd: __dirname,
+      cwd: rootDir,
       ignore: ["node_modules/**", "dist/**", ".git/**", ".env", ".env.local", ".env.development", ".env.production"]
     });
 
@@ -73,13 +86,13 @@ async function startServer() {
   });
 
   // Vite middleware for development or fallback
-  const isProduction = process.env.NODE_ENV === "production" || process.env.K_SERVICE !== undefined;
-  const distPath = path.join(__dirname, "dist");
-  const hasBuild = fs.existsSync(path.join(distPath, "index.html"));
+  const distPath = process.env.NODE_ENV === "production" ? currentDir : path.join(currentDir, "dist");
+  const indexPath = path.join(distPath, "index.html");
+  const hasBuild = fs.existsSync(indexPath);
   
   if (!isProduction || !hasBuild) {
     if (isProduction && !hasBuild) {
-      console.warn("Warning: dist/index.html is missing in production. Falling back to Vite dev server.");
+      console.warn("Warning: index.html is missing in production fallback path. Falling back to Vite dev server.");
     }
     const { createServer: createViteServer } = await import("vite");
     const vite = await createViteServer({
@@ -89,7 +102,6 @@ async function startServer() {
     app.use(vite.middlewares);
   } else {
     app.use(express.static(distPath));
-    const indexPath = path.join(distPath, "index.html");
     let indexHtml = "";
     try {
       indexHtml = fs.readFileSync(indexPath, "utf8");
