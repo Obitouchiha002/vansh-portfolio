@@ -74,7 +74,7 @@ export default function About() {
                 transition={{ duration: 0.5, delay: 0.5 }}
                 className="text-xl text-zinc-300 leading-relaxed mb-6"
               >
-                I'm a young <span className="text-white font-semibold inline-flex items-center bg-zinc-800/80 px-2 py-0.5 rounded-md border border-zinc-700 shadow-sm mx-1">tech enthusiast</span> from Delhi with a strong passion for computers, technology, and digital creation. What started as simple curiosity about how things work has grown into a deep interest in learning and building in the tech space.
+                I'm a <span className="text-white font-semibold inline-flex items-center bg-zinc-800/80 px-2 py-0.5 rounded-md border border-zinc-700 shadow-sm mx-1">creator and builder</span> from Delhi who works where AI, automation, and design meet. I build apps, automate the repetitive parts of a workflow, and create and manage content across LinkedIn, X, YouTube and Instagram — under my brand, Tech By Vansh.
               </motion.p>
               <motion.p 
                 initial={{ opacity: 0, x: -20 }}
@@ -83,7 +83,7 @@ export default function About() {
                 transition={{ duration: 0.5, delay: 0.6 }}
                 className="text-lg text-zinc-400 leading-relaxed mb-6"
               >
-                I'm especially interested in computer hardware, networking, and troubleshooting. I enjoy diagnosing issues, improving system performance, and helping people get the best out of their machines—especially when working with <span className="text-neon-green/90 font-medium">low-end setups</span>.
+                My foundation is hands-on — computer hardware, networking, and troubleshooting. That background helps me take an idea all the way to a working product, and I genuinely enjoy squeezing real performance out of <span className="text-neon-green/90 font-medium">low-end setups</span>, where smart optimization actually makes a difference.
               </motion.p>
               <motion.p 
                 initial={{ opacity: 0, x: -20 }}
@@ -92,7 +92,7 @@ export default function About() {
                 transition={{ duration: 0.5, delay: 0.7 }}
                 className="text-lg text-zinc-400 leading-relaxed"
               >
-                Beyond the technical side, I'm also creatively driven. I love <span className="text-white font-medium">graphic design</span>, <span className="text-white font-medium">video editing</span>, and content creation. By combining my technical knowledge with creativity, I aim to create engaging tech content and tutorials that make complex ideas simple and useful for everyday users.
+                On the creative side, I design <span className="text-white font-medium">graphics</span>, edit <span className="text-white font-medium">videos</span>, and use modern <span className="text-white font-medium">AI tools</span> daily to ship faster without cutting corners. The goal stays simple: build useful things and make tech easier to understand for everyone.
               </motion.p>
             </div>
           </motion.div>

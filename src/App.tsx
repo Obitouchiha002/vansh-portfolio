@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, lazy, Suspense } from 'react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import About from './components/About';
@@ -6,15 +6,35 @@ import Skills from './components/Skills';
 import Education from './components/Education';
 import Experience from './components/Experience';
 import Certifications from './components/Certifications';
-import Projects from './components/Projects';
+import Stack from './components/Stack';
+import AiTools from './components/AiTools';
+import AppsWebsites from './components/AppsWebsites';
+import GraphicsVideo from './components/GraphicsVideo';
+import Automation from './components/Automation';
+import Services from './components/Services';
+import Stats from './components/Stats';
+import ContentPlatforms from './components/ContentPlatforms';
 import YouTube from './components/YouTube';
-import Testimonials from './components/Testimonials';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
-import ResumeViewer from './components/ResumeViewer';
 import Tools from './components/Tools';
-import ToolRoute from './components/tools/ToolRoute';
 import Chatbot from './components/Chatbot';
+import ScrollProgress from './components/ScrollProgress';
+import BackToTop from './components/BackToTop';
+import SectionDots from './components/SectionDots';
+
+// Lazy-loaded: heavy PDF/canvas libraries only load on these routes,
+// keeping the main bundle small and the home page fast.
+const ResumeViewer = lazy(() => import('./components/ResumeViewer'));
+const ToolRoute = lazy(() => import('./components/tools/ToolRoute'));
+
+function RouteLoader() {
+  return (
+    <div className="min-h-[60vh] flex items-center justify-center">
+      <div className="w-10 h-10 rounded-full border-2 border-zinc-700 border-t-neon-green animate-spin" />
+    </div>
+  );
+}
 
 export default function App() {
   const [currentPath, setCurrentPath] = useState(window.location.hash || '#/');
@@ -26,10 +46,10 @@ export default function App() {
 
     // Site-wide security
     const preventDefault = (e: Event) => e.preventDefault();
-    
+
     // Disable right-click
     document.addEventListener('contextmenu', preventDefault);
-    
+
     // Disable keyboard shortcuts for inspect element
     const handleKeyDown = (e: KeyboardEvent) => {
       if (
@@ -70,7 +90,9 @@ export default function App() {
     return (
       <div className="min-h-screen bg-zinc-950 text-zinc-50 font-sans selection:bg-neon-green/30 selection:text-neon-green print:bg-white print:text-black">
         <div className="print:hidden"><Navbar /></div>
-        <ResumeViewer />
+        <Suspense fallback={<RouteLoader />}>
+          <ResumeViewer />
+        </Suspense>
         <div className="print:hidden"><Footer /></div>
         <div className="print:hidden"><Chatbot /></div>
       </div>
@@ -83,7 +105,9 @@ export default function App() {
     return (
       <div className="min-h-screen bg-zinc-950 text-zinc-50 font-sans selection:bg-neon-green/30 selection:text-neon-green print:bg-white print:text-black">
         <div className="print:hidden"><Navbar /></div>
-        <ToolRoute path={routePath} />
+        <Suspense fallback={<RouteLoader />}>
+          <ToolRoute path={routePath} />
+        </Suspense>
         <div className="print:hidden"><Footer /></div>
         <div className="print:hidden"><Chatbot /></div>
       </div>
@@ -92,22 +116,33 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-zinc-950 text-zinc-50 font-sans selection:bg-neon-green/30 selection:text-neon-green">
+      <ScrollProgress />
+      <SectionDots />
       <Navbar />
       <main>
+        {/* ---- High priority: who I am + what I do ---- */}
         <Hero />
+        <Stats />
         <About />
-        <Skills />
-        <Education />
-        <Experience />
-        <Certifications />
-        <Projects />
-        <Tools isOpen={currentPath === '#/tools'} onClose={() => { window.location.hash = '#/'; }} />
+        <Stack />
+        <AiTools />
+        <Services />
+        <AppsWebsites />
+        <GraphicsVideo />
+        <Automation />
+        <ContentPlatforms />
         <YouTube />
-        {/* <Testimonials /> */}
+        {/* ---- Lower priority: background / supporting ---- */}
+        <Skills />
+        <Experience />
+        <Education />
+        <Certifications />
+        <Tools isOpen={currentPath === '#/tools'} onClose={() => { window.location.hash = '#/'; }} />
         <Contact />
       </main>
       <Footer />
       <Chatbot />
+      <BackToTop />
     </div>
   );
 }

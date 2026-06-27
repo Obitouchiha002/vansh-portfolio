@@ -1,80 +1,12 @@
 import { useState, useRef, useEffect, FormEvent } from 'react';
 import { MessageSquare, X, Send } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
-import { GoogleGenAI, Type, FunctionDeclaration, Chat } from '@google/genai';
 
 interface Message {
   id: number;
   text: string;
   sender: 'bot' | 'user';
 }
-
-const navigateFunctionDeclaration: FunctionDeclaration = {
-  name: "navigateToSection",
-  parameters: {
-    type: Type.OBJECT,
-    description: "Navigate the user to a specific section of the website.",
-    properties: {
-      section: {
-        type: Type.STRING,
-        description: "The section to navigate to. Allowed values: 'home', 'about', 'skills', 'projects', 'contact'",
-      }
-    },
-    required: ["section"],
-  },
-};
-
-const getSystemInstruction = () => {
-  const today = new Date();
-  let age = today.getFullYear() - 2005;
-  if (today.getMonth() < 0 || (today.getMonth() === 0 && today.getDate() < 16)) {
-    age--;
-  }
-
-  return `You are the official AI assistant for Vansh Kashyap's portfolio website.
-Your name is "Tech by Vansh Bot".
-You must ONLY answer questions related to Vansh Kashyap, his skills, his projects, his education, his contact details, and this website.
-If a user asks anything outside of this scope (e.g., general knowledge, coding help not related to Vansh, weather, etc.), you MUST politely refuse to answer and remind them that you can only answer questions about Vansh.
-You must understand the user's language (English, Hindi, Hinglish, etc.) and reply in the EXACT SAME language and tone.
-
-Here is all the information you know about Vansh:
-- Name: Vansh Kashyap
-- Date of Birth: 16 January 2005 (Current Age: ${age} years old, Current Year: ${today.getFullYear()})
-- Location: New Delhi, India
-- Brand/YouTube Channel: Tech By Vansh
-- Phone/WhatsApp: +91 8800628376
-- Email: vk1234888i@gmail.com
-- Instagram: @vanshkashyap70
-- LinkedIn: Vansh Kashyap
-
-Education:
-- 12th Standard: CBSE Board, Year 2024, Score: 72.8%
-- 10th Standard: CBSE Board, Year 2022, Score: 73.8%
-- ITI (Industrial Training Institute) - Mangolpuri: NCVT, Year 2025, Score: 85%
-- B.Com (Honours) - 4th Semester: Delhi University (SOL), Present (Pursuing)
-
-Skills:
-- Graphic Design
-- Video Editing
-- Web Development (HTML, CSS, JavaScript)
-- AI tools
-- SEO
-- Tech troubleshooting
-- Low-end PC gaming solutions
-
-About Vansh:
-He is a young learner from Delhi, deeply passionate about technology, computers, and digital creation. He has a strong interest in computer hardware, networking, and troubleshooting. He loves diagnosing PC issues, optimizing performance, and helping others get the most out of their machines, especially low-end setups. He combines technical skills with creative vision to produce engaging tech tutorials and digital content.
-
-Notable Projects:
-- VanshLink: Connect instantly, chat privately. Your conversations, your control. (App) Link: https://vanshlink.vercel.app/
-- vthumb: Youtube thumbnail Downloads (App) Link: https://vthumb.vercel.app/
-- Aura Shakti: Find your aura (App) Link: https://aurashakti.vercel.app/
-
-Navigation:
-If the user asks to see projects, skills, contact, about, or home, you MUST call the "navigateToSection" tool to take them there.
-
-Keep your answers concise, friendly, and helpful.`;
-};
 
 export default function Chatbot() {
   const [isOpen, setIsOpen] = useState(false);
@@ -84,7 +16,6 @@ export default function Chatbot() {
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const chatRef = useRef<Chat | null>(null);
 
   const suggestions = [
     "12th me kitna score tha?",
@@ -122,7 +53,7 @@ export default function Chatbot() {
       } else if (lowerInput.includes('skill') || lowerInput.includes('what can you do')) {
         return "Vansh's skills include: Graphic Design, Video Editing, Web Development (HTML, CSS, JavaScript), AI tools, SEO, Tech troubleshooting, and Low-end PC gaming solutions.";
       } else if (lowerInput.includes('project') || lowerInput.includes('portfolio')) {
-        window.location.hash = '#projects';
+        window.location.hash = '#apps';
         return "Taking you to the Projects section!";
       } else if (lowerInput.includes('vanshlink')) {
         return "VanshLink: Connect instantly, chat privately. Your conversations, your control. You can check it out here: https://vanshlink.vercel.app/";
@@ -149,7 +80,7 @@ export default function Chatbot() {
       } else if (lowerInput.includes('kya aata') || lowerInput.includes('skills batao') || lowerInput.includes('kya skill')) {
         return "Vansh ko Graphic Design, Video Editing, Web Development, AI tools, SEO, aur Tech troubleshooting aati hai.";
       } else if (lowerInput.includes('kaam dikhao') || lowerInput.includes('project dikhao')) {
-        window.location.hash = '#projects';
+        window.location.hash = '#apps';
         return "Zaroor! Main aapko Projects section par le chalta hoon.";
       } else if (lowerInput.includes('baat karni') || lowerInput.includes('contact karna') || lowerInput.includes('kaise milu')) {
         window.location.hash = '#contact';
@@ -158,49 +89,50 @@ export default function Chatbot() {
       return "I'm currently in basic mode. You can ask about Vansh's skills, projects, contact, or education! / Main abhi basic mode mein hoon, aap Vansh ke skills ya projects ke baare mein puch sakte hain.";
     };
 
-    try {
-      const apiKey = process.env.GEMINI_API_KEY;
-      if (!apiKey || apiKey === 'undefined') {
-        throw new Error("API Key missing");
-      }
+    // Build chat history for the server (OpenAI/Groq format)
+    const history = messages
+      .filter((m) => m.text && m.text !== 'Thinking...')
+      .map((m) => ({ role: m.sender === 'user' ? 'user' : 'assistant', content: m.text }));
+    while (history.length && history[0].role === 'assistant') history.shift();
 
-      if (!chatRef.current) {
-        const ai = new GoogleGenAI({ apiKey });
-        chatRef.current = ai.chats.create({
-          model: "gemini-3-flash-preview",
-          config: {
-            systemInstruction: getSystemInstruction(),
-            tools: [{ functionDeclarations: [navigateFunctionDeclaration] }],
-            temperature: 0.7,
-          }
-        });
-      }
-      
-      const response = await chatRef.current.sendMessage({ message: userMsg });
-      
-      let botResponse = response.text || "";
+    try {
+      const res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: userMsg, history }),
+      });
+
+      if (!res.ok) throw new Error(`Chat API returned ${res.status}`);
+
+      const data = await res.json();
+      let botResponse: string = data.text || '';
 
       // Handle function calls for navigation
-      if (response.functionCalls && response.functionCalls.length > 0) {
-        const call = response.functionCalls[0];
-        if (call.name === "navigateToSection" && call.args && typeof call.args === 'object') {
-          const args = call.args as Record<string, unknown>;
-          const section = String(args.section || '').toLowerCase();
-          
-          let hash = '#/';
-          if (section !== 'home') hash = `#${section}`;
-          window.location.hash = hash;
-          if (section === 'home') window.scrollTo({ top: 0, behavior: 'smooth' });
-          
+      if (data.functionCall && data.functionCall.name === 'navigateToSection') {
+        const args = (data.functionCall.args || {}) as Record<string, unknown>;
+        let section = String(args.section || '').toLowerCase();
+
+        // Normalise to real section ids on the page
+        const aliases: Record<string, string> = { projects: 'apps', project: 'apps', work: 'apps', tools: 'ai-tools' };
+        if (aliases[section]) section = aliases[section];
+        const validIds = ['about', 'ai-tools', 'apps', 'services', 'stack', 'graphics', 'automation', 'platforms', 'skills', 'experience', 'education', 'youtube', 'contact'];
+
+        if (section === 'home') {
+          window.location.hash = '#/';
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          botResponse = 'Taking you to the home section!';
+        } else if (validIds.includes(section)) {
+          window.location.hash = `#${section}`;
           botResponse = `Taking you to the ${section} section!`;
         }
+        // unknown section => no navigation, keep the model's text reply
       }
 
       if (!botResponse) {
         botResponse = getFallbackResponse(userMsg);
       }
 
-      setMessages(prev => prev.map(msg => 
+      setMessages(prev => prev.map(msg =>
         msg.id === loadingId ? { ...msg, text: botResponse } : msg
       ));
     } catch (error) {

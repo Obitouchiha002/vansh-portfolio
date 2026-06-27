@@ -1,7 +1,8 @@
 {
-  "name": "react-example",
+  "name": "vansh-kashyap-portfolio",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
+  "description": "Personal portfolio of Vansh Kashyap — AI-powered creator, automation builder, and graphic & video designer.",
   "type": "module",
   "scripts": {
     "dev": "tsx server.ts",

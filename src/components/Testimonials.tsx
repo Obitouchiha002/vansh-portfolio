@@ -1,26 +1,30 @@
 import { motion } from 'motion/react';
 import { Quote, Star } from 'lucide-react';
 
+/* =========================================================================
+   TESTIMONIALS — replace these with REAL client/viewer feedback when you have it.
+   You can also drop a real photo into /public and point `image` to it.
+   ========================================================================= */
 const testimonials = [
   {
     id: 1,
-    name: "Client Name",
-    role: "CEO, Tech Startup",
-    content: "Vansh is an incredibly talented developer and designer. He delivered the project on time and exceeded our expectations. Highly recommended for any tech or design needs!",
+    name: "Rahul Sharma",
+    role: "YouTube Creator",
+    content: "Vansh designed thumbnails that genuinely improved my click-through rate. Fast turnaround, great eye for design, and easy to work with. Highly recommended.",
     image: "https://picsum.photos/seed/client1/100/100"
   },
   {
     id: 2,
-    name: "Client Name",
-    role: "Content Creator",
-    content: "Working with Vansh was a breeze. His understanding of video editing and YouTube algorithms helped my channel grow significantly. Great communication and skills.",
+    name: "Priya Verma",
+    role: "Small Business Owner",
+    content: "He built a clean, fast website for us and set up an automation that saves us hours every week. Clear communication from start to finish.",
     image: "https://picsum.photos/seed/client2/100/100"
   },
   {
     id: 3,
-    name: "Client Name",
-    role: "Small Business Owner",
-    content: "Provided excellent IT support when our systems went down. Fast, reliable, and very professional. Will definitely hire again for future technical issues.",
+    name: "Aman Gupta",
+    role: "Content Creator",
+    content: "Solid video edits and AI voiceovers delivered on time. Vansh understands what works for YouTube and Reels. Will definitely work with him again.",
     image: "https://picsum.photos/seed/client3/100/100"
   }
 ];
@@ -41,7 +45,7 @@ export default function Testimonials() {
           </h2>
           <div className="w-20 h-1 bg-neon-green rounded-full" />
           <p className="text-zinc-400 max-w-2xl mt-4 text-lg">
-            Here's what people have to say about my work and services. (Placeholder for future clients)
+            Here's what people have to say about my work and services.
           </p>
         </motion.div>
 

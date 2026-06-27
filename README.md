@@ -1,20 +1,40 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# Vansh Kashyap — Portfolio
 
-# Run and deploy your AI Studio app
+Personal portfolio of **Vansh Kashyap** — AI-powered creator, automation builder, and graphic & video designer from Delhi, India.
 
-This contains everything you need to run your app locally.
+🔗 **Live:** [techbyvansh.vercel.app](https://techbyvansh.vercel.app/)
+📺 **YouTube:** [Tech By Vansh](https://youtube.com/@techbyvansh)
 
-View your app in AI Studio: https://ai.studio/apps/4dc885f5-d57d-4cbb-8fd5-6ca3d2142afd
+## Features
+
+- AI Tools showcase with per-tool detail dashboards
+- Apps & Websites, Graphics & AI Video gallery, and Automation workflows
+- Services section, animated stats, and an AI chatbot assistant
+- Built-in utility tools (PDF/image tools, resume maker) and a resume viewer
+- PWA support, responsive design, smooth animations
+
+## Tech Stack
+
+React 19 · Vite 6 · TypeScript · Tailwind CSS 4 · Motion · Express
 
 ## Run Locally
 
-**Prerequisites:**  Node.js
-
+**Prerequisites:** Node.js
 
 1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+   ```bash
+   npm install
+   ```
+2. Copy `.env.example` to `.env.local` and fill in your keys
+   (`GEMINI_API_KEY` for the chatbot, `YOUTUBE_API_KEY` for live stats).
+3. Start the dev server:
+   ```bash
+   npm run dev
+   ```
+
+## Scripts
+
+- `npm run dev` — start the dev server
+- `npm run build` — production build
+- `npm start` — run the built server
+- `npm run lint` — type-check with `tsc`

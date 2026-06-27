@@ -28,11 +28,11 @@ export default function Hero() {
           </h1>
           
           <h2 className="text-xl md:text-2xl font-medium text-zinc-400">
-            Tech Enthusiast | IT Support Learner | Graphic Designer | Content Creator
+            AI-Powered Creator <span className="text-zinc-600">·</span> Automation Builder <span className="text-zinc-600">·</span> Social Media Manager
           </h2>
-          
+
           <p className="text-zinc-500 max-w-lg text-lg leading-relaxed">
-            I am passionate about exploring technology, solving computer problems, and creating digital content that helps people.
+            I build apps, automate everyday workflows, and create content — using AI and design to turn ideas into real, working products.
           </p>
           
           <div className="flex flex-wrap items-center gap-4 mt-4">
@@ -79,7 +79,7 @@ export default function Hero() {
             
             {/* Floating tech badges */}
             <div className="absolute top-4 -left-2 md:top-8 md:-left-8 bg-zinc-900 border border-zinc-800 px-3 py-1.5 md:px-4 md:py-2 rounded-lg shadow-xl backdrop-blur-sm z-20">
-              <span className="text-neon-blue font-mono text-xs md:text-sm">{'<IT Support />'}</span>
+              <span className="text-neon-blue font-mono text-xs md:text-sm">{'<AI Builder />'}</span>
             </div>
             <div className="absolute bottom-8 -right-2 md:bottom-12 md:-right-8 bg-zinc-900 border border-zinc-800 px-3 py-1.5 md:px-4 md:py-2 rounded-lg shadow-xl backdrop-blur-sm z-20">
               <span className="text-neon-green font-mono text-xs md:text-sm">{'<Creator />'}</span>

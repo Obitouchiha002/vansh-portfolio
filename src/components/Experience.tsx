@@ -1,7 +1,17 @@
 import { motion } from 'motion/react';
-import { Briefcase, Award, Zap } from 'lucide-react';
+import { Briefcase, Award, Zap, Rocket } from 'lucide-react';
 
 const experienceData = [
+  {
+    role: 'Content Creator & Automation Builder',
+    company: 'Tech By Vansh (Self-employed)',
+    period: 'Present',
+    description: 'Building apps and AI automations, and creating & managing content across LinkedIn, YouTube and Instagram.',
+    icon: Rocket,
+    color: 'text-neon-green',
+    borderColor: 'border-neon-green',
+    bgColor: 'bg-neon-green/10'
+  },
   {
     role: 'Skill Saksham Program',
     company: 'Microsoft',

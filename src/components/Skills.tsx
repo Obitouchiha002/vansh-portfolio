@@ -1,13 +1,15 @@
 import { motion } from 'motion/react';
-import { Monitor, Network, Code, PenTool, Video, Cpu, Lightbulb, RefreshCw, Palette, Zap } from 'lucide-react';
+import { Monitor, Network, Code, PenTool, Video, Cpu, Lightbulb, RefreshCw, Palette, Zap, Workflow, Share2 } from 'lucide-react';
 
 const technicalSkills = [
-  { name: 'Computer Hardware & Troubleshooting', icon: Monitor, level: 90 },
-  { name: 'Basic Networking', icon: Network, level: 75 },
-  { name: 'Web Development (HTML, CSS)', icon: Code, level: 80 },
+  { name: 'AI Tools Usage', icon: Cpu, level: 95 },
+  { name: 'Automation (n8n)', icon: Workflow, level: 88 },
+  { name: 'Social Media Management', icon: Share2, level: 90 },
   { name: 'Graphic Design', icon: PenTool, level: 85 },
   { name: 'Video Editing', icon: Video, level: 85 },
-  { name: 'AI Tools Usage', icon: Cpu, level: 95 },
+  { name: 'Web Development (HTML, CSS)', icon: Code, level: 80 },
+  { name: 'Computer Hardware & Troubleshooting', icon: Monitor, level: 90 },
+  { name: 'Basic Networking', icon: Network, level: 75 },
 ];
 
 const softSkills = [
