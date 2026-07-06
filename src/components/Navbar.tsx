@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Menu, X, MoreHorizontal, ChevronDown } from 'lucide-react';
+import { Menu, X, MoreHorizontal, ChevronDown, LayoutGrid } from 'lucide-react';
 
 const navItems = [
   { name: 'About', href: '#about' },
@@ -77,6 +77,12 @@ export default function Navbar() {
 
         {/* Desktop Nav */}
         <nav className="hidden md:flex items-center gap-6 lg:gap-8">
+          <a
+            href="#/"
+            className="inline-flex items-center gap-1.5 text-sm font-semibold text-zinc-300 hover:text-neon-green transition-colors whitespace-nowrap"
+          >
+            <LayoutGrid size={15} /> Browse by area
+          </a>
           {visibleItems.map((item) => (
             <a
               key={item.name}
@@ -171,6 +177,13 @@ export default function Navbar() {
 
             {/* Scrollable links */}
             <div className="flex-1 overflow-y-auto px-6 py-6 flex flex-col gap-2.5">
+              <a
+                href="#/"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="inline-flex items-center justify-center gap-2 text-lg font-bold text-zinc-100 bg-zinc-900 border border-zinc-700 px-4 py-3 rounded-xl hover:border-neon-green/50 hover:text-neon-green transition-colors mb-1"
+              >
+                <LayoutGrid size={18} /> Browse by area
+              </a>
               {[
                 ...navItems.filter(item => !['Tools', 'Resume', 'Apps'].includes(item.name)),
                 ...navItems.filter(item => ['Apps', 'Tools', 'Resume'].includes(item.name)),

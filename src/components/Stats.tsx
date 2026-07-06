@@ -47,7 +47,7 @@ function CountUp({ value, suffix }: { value: number; suffix: string }) {
 
 export default function Stats() {
   // Live YouTube numbers (fallback values used until the API responds / if it fails)
-  const [live, setLive] = useState({ subscribers: 490, videos: 169 });
+  const [live, setLive] = useState({ subscribers: 493, videos: 157 });
 
   useEffect(() => {
     fetch('/api/youtube-stats')
@@ -55,8 +55,8 @@ export default function Stats() {
       .then((d) => {
         if (d) {
           setLive({
-            subscribers: parseInt(d.subscribers) || 490,
-            videos: parseInt(d.videoCount) || 169,
+            subscribers: parseInt(d.subscribers) || 493,
+            videos: parseInt(d.videoCount) || 157,
           });
         }
       })

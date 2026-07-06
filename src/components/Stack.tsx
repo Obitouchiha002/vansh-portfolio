@@ -74,7 +74,8 @@ const categories: { title: string; bar: string; tools: Tool[] }[] = [
   },
 ];
 
-export default function Stack() {
+export default function Stack({ only }: { only?: string[] } = {}) {
+  const cats = only ? categories.filter((c) => only.includes(c.title)) : categories;
   return (
     <section id="stack" className="py-24 relative overflow-hidden">
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[400px] bg-neon-blue/5 rounded-full blur-[120px] -z-10 pointer-events-none" />
@@ -98,7 +99,7 @@ export default function Stack() {
 
         <MobileCollapse maxHeight={520}>
         <div className="flex flex-col gap-12">
-          {categories.map((cat, ci) => (
+          {cats.map((cat, ci) => (
             <motion.div
               key={cat.title}
               initial={{ opacity: 0, y: 20 }}

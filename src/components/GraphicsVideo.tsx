@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from 'motion/react';
 import { useState } from 'react';
-import { ImageIcon, Play, PenTool, Sparkles, Images, Maximize2, X, LayoutGrid, Megaphone, BarChart3, Clapperboard, Clock } from 'lucide-react';
+import { ImageIcon, Play, PenTool, Sparkles, Images, Maximize2, X, LayoutGrid, Megaphone, BarChart3, Clapperboard, Clock, Monitor, Smartphone, Gamepad2 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import ThumbnailsGallery from './ThumbnailsGallery';
 import PosterGallery from './PosterGallery';
@@ -83,6 +83,7 @@ type Cover = {
   design?: { from: string; to: string };
   frames?: CoverFrame[];
   comingSoon?: boolean;
+  device?: 'browser' | 'phone';
   open:
     | { type: 'gallery'; key: GalleryKey }
     | { type: 'image'; src: string }
@@ -107,7 +108,7 @@ const covers: Cover[] = [
 
   // ----- Video Edits -----
   { title: 'Gaming Montage', tab: 'Video Edits', thumb: '/gaming-montage-editing-thumbnail.png', icon: Play, comingSoon: true, open: { type: 'image', src: '/gaming-montage-editing-thumbnail.png' } },
-  { title: 'Shorts Editing', tab: 'Video Edits', thumb: '/shorts-video-editing-thumbnail.png', icon: Play, comingSoon: true, open: { type: 'image', src: '/shorts-video-editing-thumbnail.png' } },
+  { title: 'Shorts Editing', tab: 'Video Edits', thumb: '/shorts-video-editing-thumbnail.png', icon: Play, comingSoon: true, device: 'phone', open: { type: 'image', src: '/shorts-video-editing-thumbnail.png' } },
   { title: 'Cinematic Edit', tab: 'Video Edits', thumb: '/cinematic-video-editing-thumbnail.png', icon: Play, comingSoon: true, open: { type: 'image', src: '/cinematic-video-editing-thumbnail.png' } },
   ...(aiVideoCategories.length
     ? [{
@@ -129,18 +130,122 @@ const covers: Cover[] = [
   { title: 'Gaming Solutions Videos', tab: 'Gaming', thumb: '/gaming solution vidoes.png', icon: Play, open: { type: 'gallery', key: 'gamingSolutions' } },
 ];
 
-const TAB_ORDER = ['All', 'Graphics', 'Video Edits', 'Thumbnails', 'Gaming'] as const;
+const CATEGORIES: { tab: Cover['tab']; label: string; icon: LucideIcon; accent: string }[] = [
+  { tab: 'Graphics', label: 'Design & Graphics', icon: PenTool, accent: '0,229,255' },
+  { tab: 'Video Edits', label: 'Video Editing', icon: Clapperboard, accent: '244,114,182' },
+  { tab: 'Thumbnails', label: 'Thumbnails', icon: ImageIcon, accent: '251,146,60' },
+  { tab: 'Gaming', label: 'Gaming', icon: Gamepad2, accent: '0,255,157' },
+];
+
+/* Mac-style browser mockup wrapping a 16:9 preview. */
+function BrowserFrame({ title, children }: { title: string; children: any }) {
+  return (
+    <div className="rounded-xl overflow-hidden border border-zinc-700/50 bg-zinc-900 shadow-lg">
+      <div className="h-8 bg-zinc-800/90 flex items-center gap-1.5 px-3 border-b border-zinc-700/50">
+        <span className="w-2.5 h-2.5 rounded-full bg-red-400/70" />
+        <span className="w-2.5 h-2.5 rounded-full bg-amber-400/70" />
+        <span className="w-2.5 h-2.5 rounded-full bg-green-400/70" />
+        <div className="ml-2 h-4 flex-1 max-w-[180px] rounded-full bg-zinc-900/80 border border-zinc-700/40 flex items-center px-2">
+          <span className="text-[9px] text-zinc-500 font-mono truncate">{title}</span>
+        </div>
+      </div>
+      <div className="relative aspect-video bg-zinc-950 overflow-hidden">{children}</div>
+    </div>
+  );
+}
+
+/* Phone mockup on a gradient stage — for vertical / mobile content. */
+function PhoneStage({ src, accent }: { src: string; accent: string }) {
+  return (
+    <div
+      className="relative aspect-video overflow-hidden rounded-xl border border-zinc-700/50 flex items-center justify-center"
+      style={{ background: `radial-gradient(120% 100% at 50% 0%, rgba(${accent},0.20), #0a0a0b 72%)` }}
+    >
+      <div className="h-[86%] aspect-[9/19] rounded-[1.1rem] border-[4px] border-zinc-800 bg-zinc-950 overflow-hidden shadow-2xl">
+        <img src={src} alt="" loading="lazy" className="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-105" />
+      </div>
+    </div>
+  );
+}
+
+/* A single preview card — device-framed, with hover + badges. */
+function PreviewCard({ cover, accent, onClick }: { key?: string; cover: Cover; accent: string; onClick: () => void }) {
+  const Icon = cover.icon;
+  const isDashboard = cover.open.type === 'dashboard';
+  const isPhone = cover.device === 'phone';
+  const slug = cover.title.toLowerCase().replace(/[^a-z0-9]+/g, '') + '.vansh';
+
+  return (
+    <motion.button
+      onClick={onClick}
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.45 }}
+      whileHover={{ y: -5 }}
+      style={{ ['--a' as string]: accent }}
+      className={`group relative text-left rounded-2xl p-3 bg-zinc-900/50 border transition-all duration-300 ${
+        isDashboard
+          ? 'lg:col-span-2 border-[rgb(var(--a))]/30 hover:border-[rgb(var(--a))]/60 hover:shadow-[0_0_40px_-12px_rgb(var(--a))]'
+          : 'border-zinc-800 hover:border-zinc-600'
+      }`}
+    >
+      <div className="relative">
+        {isPhone ? (
+          <PhoneStage src={cover.thumb} accent={accent} />
+        ) : (
+          <BrowserFrame title={slug}>
+            {cover.design ? (
+              <DesignedCover title={cover.title} subtitle={cover.subtitle} Icon={Icon} from={cover.design.from} to={cover.design.to} frames={cover.frames} />
+            ) : cover.isVideoThumb ? (
+              <video src={cover.thumb} muted playsInline preload="metadata" className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+            ) : (
+              <img src={cover.thumb} alt={cover.title} loading="lazy" decoding="async" referrerPolicy="no-referrer" className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+            )}
+          </BrowserFrame>
+        )}
+
+        {/* device chip */}
+        <div className="absolute top-2 left-2 inline-flex items-center gap-1 bg-zinc-950/80 backdrop-blur px-2 py-1 rounded-full border border-zinc-700/50 text-[10px] text-zinc-300 font-medium">
+          {isPhone ? <><Smartphone size={10} /> Mobile</> : <><Monitor size={10} /> Desktop</>}
+        </div>
+
+        {/* badge / coming-soon */}
+        {cover.comingSoon ? (
+          <div className="absolute top-2 right-2 inline-flex items-center gap-1 bg-amber-400/90 text-zinc-950 px-2.5 py-1 rounded-full text-[10px] font-bold">
+            <Clock size={10} /> Coming Soon
+          </div>
+        ) : cover.badge ? (
+          <div className="absolute top-2 right-2 inline-flex items-center gap-1 text-zinc-950 px-2.5 py-1 rounded-full text-[10px] font-bold" style={{ background: `rgb(${accent})` }}>
+            {cover.badge}
+          </div>
+        ) : null}
+
+        {/* hover action */}
+        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+          <span className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-bold ${cover.comingSoon ? 'bg-amber-400 text-zinc-950' : 'bg-white text-zinc-950'}`}>
+            {cover.comingSoon ? <><Clock size={15} /> Coming Soon</> : isDashboard ? <><LayoutGrid size={15} /> Open</> : <><Maximize2 size={15} /> View</>}
+          </span>
+        </div>
+      </div>
+
+      {/* footer */}
+      <div className="flex items-center gap-2.5 px-1 pt-3">
+        <Icon size={16} style={{ color: `rgb(${accent})` }} className="shrink-0" />
+        <div className="min-w-0">
+          <h4 className="text-sm font-display font-bold text-zinc-100 truncate">{cover.title}</h4>
+          {cover.subtitle && <p className="text-[11px] text-zinc-500 truncate">{cover.subtitle}</p>}
+        </div>
+      </div>
+    </motion.button>
+  );
+}
 
 export default function GraphicsVideo() {
-  const tabs = TAB_ORDER.filter((t) => t === 'All' || covers.some((c) => c.tab === t));
-
-  const [activeTab, setActiveTab] = useState<string>('All');
   const [openGallery, setOpenGallery] = useState<GalleryKey | null>(null);
   const [dashboard, setDashboard] = useState<{ title: string; categories: MediaCategory[] } | null>(null);
   const [lightbox, setLightbox] = useState<{ src: string; title: string } | null>(null);
   const [comingSoon, setComingSoon] = useState<string | null>(null);
-
-  const filtered = activeTab === 'All' ? covers : covers.filter((c) => c.tab === activeTab);
 
   const handleClick = (cover: Cover) => {
     if (cover.comingSoon) setComingSoon(cover.title);
@@ -170,84 +275,36 @@ export default function GraphicsVideo() {
           </p>
         </motion.div>
 
-        {/* Filter tabs */}
-        <div className="flex flex-wrap gap-3 mb-12">
-          {tabs.map((tab) => (
-            <button
-              key={tab}
-              onClick={() => setActiveTab(tab)}
-              className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
-                activeTab === tab
-                  ? 'bg-neon-blue text-zinc-950 shadow-[0_0_15px_rgba(0,229,255,0.3)]'
-                  : 'bg-zinc-900 text-zinc-400 border border-zinc-800 hover:text-zinc-100 hover:border-zinc-700'
-              }`}
-            >
-              {tab}
-            </button>
-          ))}
-        </div>
-
-        <motion.div layout className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          <AnimatePresence mode="popLayout">
-            {filtered.map((cover, index) => {
-              const Icon = cover.icon;
-              const isDashboard = cover.open.type === 'dashboard';
-              return (
-                <motion.button
-                  layout
-                  key={`${cover.tab}-${cover.title}`}
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.9 }}
-                  transition={{ duration: 0.35, delay: index * 0.04 }}
-                  onClick={() => handleClick(cover)}
-                  className={`group relative rounded-2xl overflow-hidden bg-zinc-900 border text-left transition-colors ${
-                    isDashboard ? 'border-neon-blue/30 hover:border-neon-blue/60' : 'border-zinc-800 hover:border-neon-blue/40'
-                  }`}
-                >
-                  <div className="aspect-video overflow-hidden relative bg-zinc-950">
-                    {cover.design ? (
-                      <DesignedCover title={cover.title} subtitle={cover.subtitle} Icon={Icon} from={cover.design.from} to={cover.design.to} frames={cover.frames} />
-                    ) : (
-                      <>
-                        {cover.isVideoThumb ? (
-                          <video src={cover.thumb} muted playsInline preload="metadata" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
-                        ) : (
-                          <img src={cover.thumb} alt={cover.title} loading="lazy" decoding="async" referrerPolicy="no-referrer" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
-                        )}
-                        <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/90 via-zinc-950/20 to-transparent" />
-                        <div className="absolute top-3 left-3 bg-zinc-950/80 backdrop-blur-md p-2 rounded-full border border-zinc-800">
-                          <Icon size={15} className="text-neon-blue" />
-                        </div>
-                        <div className="absolute bottom-3 left-4 right-4">
-                          <h3 className="text-base font-display font-bold text-white truncate">{cover.title}</h3>
-                          {cover.subtitle && <p className="text-[11px] text-zinc-400 truncate mt-0.5">{cover.subtitle}</p>}
-                        </div>
-                      </>
-                    )}
-
-                    {cover.comingSoon ? (
-                      <div className="absolute top-3 right-3 inline-flex items-center gap-1 bg-amber-400/90 text-zinc-950 px-2.5 py-1 rounded-full text-[11px] font-bold">
-                        <Clock size={11} /> Coming Soon
-                      </div>
-                    ) : cover.badge ? (
-                      <div className="absolute top-3 right-3 inline-flex items-center gap-1 bg-neon-blue/90 text-zinc-950 px-2.5 py-1 rounded-full text-[11px] font-bold">
-                        {cover.badge}
-                      </div>
-                    ) : null}
-
-                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                      <span className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-bold ${cover.comingSoon ? 'bg-amber-400 text-zinc-950' : 'bg-neon-blue text-zinc-950'}`}>
-                        {cover.comingSoon ? <Clock size={15} /> : isDashboard ? <LayoutGrid size={15} /> : <Maximize2 size={15} />}
-                        {cover.comingSoon ? 'Coming Soon' : isDashboard ? 'Open' : 'View'}
-                      </span>
-                    </div>
+        {/* Category-grouped device previews */}
+        <div className="flex flex-col gap-16">
+          {CATEGORIES.map((cat) => {
+            const items = covers.filter((c) => c.tab === cat.tab);
+            if (!items.length) return null;
+            const CatIcon = cat.icon;
+            return (
+              <div key={cat.tab}>
+                {/* category header */}
+                <div className="flex items-center gap-3 mb-6">
+                  <div
+                    className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0"
+                    style={{ background: `rgba(${cat.accent},0.12)`, border: `1px solid rgba(${cat.accent},0.3)`, color: `rgb(${cat.accent})` }}
+                  >
+                    <CatIcon size={18} />
                   </div>
-                </motion.button>
-              );
-            })}
-          </AnimatePresence>
-        </motion.div>
+                  <h3 className="font-display font-bold text-lg text-zinc-100">{cat.label}</h3>
+                  <span className="text-xs font-mono text-zinc-600">{items.length}</span>
+                  <div className="flex-1 h-px bg-gradient-to-r from-zinc-800 to-transparent" />
+                </div>
+                {/* bento grid */}
+                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                  {items.map((cover) => (
+                    <PreviewCard key={cover.title} cover={cover} accent={cat.accent} onClick={() => handleClick(cover)} />
+                  ))}
+                </div>
+              </div>
+            );
+          })}
+        </div>
       </div>
 
       {/* Existing dedicated galleries */}

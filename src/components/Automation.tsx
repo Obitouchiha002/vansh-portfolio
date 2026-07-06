@@ -1,15 +1,14 @@
-import { motion, AnimatePresence } from 'motion/react';
-import { useState, useEffect } from 'react';
-import { Workflow, Bot, Image as ImageIcon, Mail, Clock, ArrowUpRight, X, ArrowRight } from 'lucide-react';
+import { motion } from 'motion/react';
+import { Workflow, Bot, Image as ImageIcon, Mail, Clock, Zap, CheckCircle2 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
 /* =========================================================================
-   AUTOMATION DATA — PLACEHOLDER. Replace with your real workflows.
-   Click a card => opens the flow detail. For each item:
+   AUTOMATION — real workflows I build, shown as visual node-flows (n8n style).
+   For each item:
    - does:   1 line on what it actually does
-   - tools:  string[] of tools used (n8n, Zapier, Make, ChatGPT API, ...)
-   - impact: the metric ("Saved ~5 hrs/week") — shown big in accent colour
-   - steps:  the actual flow, step by step (shown inside the detail view)
+   - tools:  string[] of tools used (n8n, ChatGPT API, ...)
+   - impact: the outcome, shown in accent colour
+   - steps:  the actual flow, step by step (rendered as a node chain)
    ========================================================================= */
 type Automation = {
   name: string;
@@ -75,19 +74,54 @@ const automations: Automation[] = [
   },
 ];
 
+/* Vertical node-chain that visualises a workflow like an n8n canvas. */
+function FlowChain({ steps }: { steps: string[] }) {
+  return (
+    <div className="mt-5">
+      {steps.map((step, i) => {
+        const isTrigger = i === 0;
+        const isOutput = i === steps.length - 1;
+        const tag = isTrigger ? 'Trigger' : isOutput ? 'Output' : `Step ${i}`;
+        return (
+          <div key={i} className="relative flex gap-3.5 pb-4 last:pb-0">
+            {/* connecting line */}
+            {!isOutput && (
+              <span className="absolute left-[15px] top-8 bottom-0 w-[2px] bg-gradient-to-b from-neon-cyan/50 to-zinc-700/60" />
+            )}
+            {/* node */}
+            <span
+              className={`relative z-10 w-8 h-8 shrink-0 rounded-lg flex items-center justify-center border ${
+                isTrigger
+                  ? 'bg-neon-cyan/15 border-neon-cyan/50 text-neon-cyan'
+                  : isOutput
+                  ? 'bg-neon-green/15 border-neon-green/50 text-neon-green'
+                  : 'bg-zinc-800 border-zinc-700 text-zinc-300'
+              }`}
+            >
+              {isTrigger ? <Zap size={14} /> : isOutput ? <CheckCircle2 size={15} /> : <span className="text-xs font-bold">{i}</span>}
+            </span>
+            <div className="flex-1 pt-0.5">
+              <span
+                className={`text-[10px] font-mono uppercase tracking-wider ${
+                  isTrigger ? 'text-neon-cyan' : isOutput ? 'text-neon-green' : 'text-zinc-500'
+                }`}
+              >
+                {tag}
+              </span>
+              <p className="text-sm text-zinc-300 leading-snug">{step}</p>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
 export default function Automation() {
-  const [selected, setSelected] = useState<Automation | null>(null);
-
-  useEffect(() => {
-    document.body.style.overflow = selected ? 'hidden' : 'unset';
-    return () => {
-      document.body.style.overflow = 'unset';
-    };
-  }, [selected]);
-
   return (
     <section id="automation" className="py-24 relative overflow-hidden">
       <div className="absolute top-1/3 left-0 w-72 h-72 bg-neon-cyan/5 rounded-full blur-3xl -z-10 pointer-events-none" />
+      <div className="absolute bottom-0 right-0 w-96 h-96 bg-rose-500/5 rounded-full blur-[130px] -z-10 pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-6">
         <motion.div
@@ -95,16 +129,18 @@ export default function Automation() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="flex flex-col gap-4 mb-16"
+          className="flex flex-col gap-4 mb-14"
         >
-          <h2 className="text-3xl md:text-5xl font-display font-bold flex items-center gap-3">
-            <Workflow className="text-neon-cyan" size={36} />
-            Automation
+          <div className="inline-flex items-center gap-2 text-neon-cyan">
+            <Workflow size={20} />
+            <span className="text-xs font-mono uppercase tracking-[0.2em]">Workflow Automation</span>
+          </div>
+          <h2 className="text-3xl md:text-5xl font-display font-bold">
+            Automations That <span className="text-neon-cyan">Run Themselves</span>
           </h2>
           <div className="w-20 h-1 bg-neon-cyan rounded-full shadow-[0_0_10px_rgba(0,238,226,0.5)]" />
           <p className="text-zinc-400 max-w-2xl mt-2 text-lg">
-            Workflows I build with n8n to save time and remove manual work.{' '}
-            <span className="text-zinc-500">Tap a card to see the flow.</span>
+            Multi-step workflows I build to remove manual work — connecting apps, APIs and AI so they run on their own.
           </p>
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-zinc-900 border border-zinc-800 w-fit mt-1">
             <img src="/logos/n8n.svg" alt="n8n" className="w-4 h-4" />
@@ -114,130 +150,51 @@ export default function Automation() {
           </div>
         </motion.div>
 
-        <div className="grid md:grid-cols-2 gap-6">
+        <div className="grid md:grid-cols-2 gap-6 lg:gap-7">
           {automations.map((item, index) => {
             const Icon = item.icon;
             return (
-              <motion.button
+              <motion.div
                 key={item.name}
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 24 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
+                viewport={{ once: true, amount: 0.2 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
-                whileHover={{ y: -5 }}
-                whileTap={{ scale: 0.99 }}
-                onClick={() => setSelected(item)}
-                className="group relative text-left bg-zinc-900/60 border border-zinc-800 rounded-2xl p-6 backdrop-blur-sm hover:border-neon-cyan/40 hover:shadow-[0_0_30px_rgba(0,238,226,0.12)] transition-all duration-300"
+                className="group relative rounded-3xl bg-gradient-to-b from-zinc-900/70 to-zinc-950 border border-zinc-800 p-6 md:p-7 backdrop-blur-sm hover:border-neon-cyan/40 hover:shadow-[0_0_40px_-10px_rgba(0,238,226,0.25)] transition-all duration-300"
               >
+                {/* header */}
                 <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 shrink-0 rounded-xl bg-zinc-800/80 border border-zinc-700/60 flex items-center justify-center text-neon-cyan group-hover:scale-110 transition-transform">
+                  <div className="w-12 h-12 shrink-0 rounded-xl bg-neon-cyan/10 border border-neon-cyan/25 flex items-center justify-center text-neon-cyan group-hover:scale-110 transition-transform">
                     <Icon size={22} />
                   </div>
-
-                  <div className="flex-1">
-                    <h3 className="text-xl font-display font-bold text-zinc-100 mb-2 flex items-center gap-1.5">
-                      {item.name}
-                      <ArrowUpRight size={16} className="text-zinc-600 group-hover:text-neon-cyan transition-colors" />
-                    </h3>
-                    <p className="text-zinc-400 text-sm leading-relaxed mb-4">{item.does}</p>
-
-                    <div className="flex flex-wrap gap-2 mb-4">
-                      {item.tools.map((t) => (
-                        <span key={t} className="text-[11px] font-mono px-2.5 py-1 rounded-md bg-zinc-800/80 border border-zinc-700/60 text-zinc-300">
-                          {t}
-                        </span>
-                      ))}
-                    </div>
-
-                    <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-neon-cyan/10 border border-neon-cyan/20">
-                      <span className="w-1.5 h-1.5 rounded-full bg-neon-cyan animate-pulse" />
-                      <span className="text-neon-cyan font-bold text-sm">{item.impact}</span>
-                    </div>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="text-xl font-display font-bold text-zinc-100">{item.name}</h3>
+                    <p className="text-zinc-400 text-sm leading-relaxed mt-1">{item.does}</p>
                   </div>
                 </div>
-              </motion.button>
+
+                {/* impact pill */}
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 mt-4 rounded-lg bg-neon-cyan/10 border border-neon-cyan/20">
+                  <span className="w-1.5 h-1.5 rounded-full bg-neon-cyan animate-pulse" />
+                  <span className="text-neon-cyan font-bold text-sm">{item.impact}</span>
+                </div>
+
+                {/* the flow */}
+                <FlowChain steps={item.steps} />
+
+                {/* tools */}
+                <div className="flex flex-wrap gap-2 mt-5 pt-5 border-t border-zinc-800/70">
+                  {item.tools.map((t) => (
+                    <span key={t} className="text-[11px] font-mono px-2.5 py-1 rounded-md bg-zinc-800/80 border border-zinc-700/60 text-zinc-300">
+                      {t}
+                    </span>
+                  ))}
+                </div>
+              </motion.div>
             );
           })}
         </div>
       </div>
-
-      {/* Flow detail modal */}
-      <AnimatePresence>
-        {selected && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={() => setSelected(null)}
-            className="fixed inset-0 z-[70] bg-zinc-950/90 backdrop-blur-sm overflow-y-auto"
-          >
-            <div className="min-h-screen px-4 py-12 md:py-20 flex items-start md:items-center justify-center">
-              <motion.div
-                initial={{ opacity: 0, y: 40, scale: 0.96 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, y: 20, scale: 0.96 }}
-                transition={{ type: 'spring', duration: 0.5 }}
-                onClick={(e) => e.stopPropagation()}
-                className="relative w-full max-w-xl bg-zinc-900 border border-zinc-800 rounded-3xl overflow-hidden shadow-2xl"
-              >
-                <div className="absolute -top-24 left-1/2 -translate-x-1/2 w-72 h-48 rounded-full blur-[80px] opacity-30 bg-neon-cyan pointer-events-none" />
-
-                <button
-                  onClick={() => setSelected(null)}
-                  className="absolute top-4 right-4 z-20 p-2 bg-zinc-950/60 hover:bg-zinc-800 rounded-full text-zinc-400 hover:text-white transition-colors border border-zinc-700/50"
-                >
-                  <X size={20} />
-                </button>
-
-                <div className="relative p-6 md:p-8">
-                  <div className="flex items-center gap-4 mb-5">
-                    <div className="w-14 h-14 shrink-0 rounded-2xl bg-zinc-800 border border-zinc-700/60 flex items-center justify-center text-neon-cyan">
-                      <selected.icon size={26} />
-                    </div>
-                    <h2 className="text-2xl md:text-3xl font-display font-bold text-white">{selected.name}</h2>
-                  </div>
-
-                  <p className="text-zinc-300 leading-relaxed mb-6">{selected.does}</p>
-
-                  {/* Flow steps */}
-                  <h3 className="text-sm font-bold uppercase tracking-wider text-zinc-500 mb-4">The flow</h3>
-                  <div className="space-y-3 mb-7">
-                    {selected.steps.map((step, i) => (
-                      <motion.div
-                        key={i}
-                        initial={{ opacity: 0, x: -12 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: 0.1 + i * 0.07 }}
-                        className="flex items-center gap-3"
-                      >
-                        <span className="w-7 h-7 shrink-0 rounded-full bg-neon-cyan/10 border border-neon-cyan/30 text-neon-cyan text-xs font-bold flex items-center justify-center">
-                          {i + 1}
-                        </span>
-                        <span className="text-sm text-zinc-300 flex-1">{step}</span>
-                        {i < selected.steps.length - 1 && <ArrowRight size={14} className="text-zinc-700 shrink-0" />}
-                      </motion.div>
-                    ))}
-                  </div>
-
-                  {/* Tools + impact */}
-                  <div className="flex flex-wrap gap-2 mb-5">
-                    {selected.tools.map((t) => (
-                      <span key={t} className="text-xs font-mono px-3 py-1.5 rounded-lg bg-zinc-800/70 border border-zinc-700/60 text-zinc-300">
-                        {t}
-                      </span>
-                    ))}
-                  </div>
-
-                  <div className="flex items-center gap-2 px-4 py-3 rounded-xl bg-neon-cyan/10 border border-neon-cyan/20">
-                    <span className="w-2 h-2 rounded-full bg-neon-cyan animate-pulse" />
-                    <span className="text-neon-cyan font-bold">{selected.impact}</span>
-                  </div>
-                </div>
-              </motion.div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </section>
   );
 }

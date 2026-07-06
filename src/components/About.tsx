@@ -3,14 +3,14 @@ import { MapPin, Calendar, User } from 'lucide-react';
 
 export default function About() {
   return (
-    <section id="about" className="py-24 relative">
+    <section id="about" className="py-16 md:py-24 relative">
       <div className="max-w-7xl mx-auto px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="flex flex-col gap-4 mb-16"
+          className="flex flex-col gap-4 mb-10 md:mb-16"
         >
           <h2 className="text-3xl md:text-5xl font-display font-bold">
             About <span className="text-neon-green">Me</span>

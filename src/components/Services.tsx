@@ -1,5 +1,5 @@
 import { motion } from 'motion/react';
-import { PenTool, Video, Code, Workflow, Sparkles, Share2, ArrowRight, MessageCircle } from 'lucide-react';
+import { PenTool, Video, Code, Workflow, Sparkles, Share2, Search, ArrowRight, MessageCircle } from 'lucide-react';
 
 /* =========================================================================
    SERVICES DATA — edit freely. These are the things you offer to clients.
@@ -30,6 +30,14 @@ const services = [
     glow: '192,132,252',
   },
   {
+    title: 'SEO',
+    description: 'Get your site ranking on Google — technical setup, on-page and off-page optimization.',
+    points: ['Search Console & sitemaps', 'On-page & off-page SEO', 'Keyword research'],
+    icon: Search,
+    accent: 'text-emerald-400',
+    glow: '52,211,153',
+  },
+  {
     title: 'Automation Setup',
     description: 'Workflows that remove repetitive manual work and save you hours every week.',
     points: ['Content pipelines', 'Auto-responders', 'AI flows'],
@@ -55,7 +63,8 @@ const services = [
   },
 ];
 
-export default function Services() {
+export default function Services({ only }: { only?: string[] } = {}) {
+  const items = only ? services.filter((s) => only.includes(s.title)) : services;
   return (
     <section id="services" className="py-24 relative overflow-hidden">
       <div className="absolute top-0 left-1/4 w-72 h-72 bg-neon-green/5 rounded-full blur-3xl -z-10 pointer-events-none" />
@@ -78,7 +87,7 @@ export default function Services() {
         </motion.div>
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {services.map((service, index) => {
+          {items.map((service, index) => {
             const Icon = service.icon;
             return (
               <motion.div

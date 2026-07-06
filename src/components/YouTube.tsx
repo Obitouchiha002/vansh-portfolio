@@ -26,8 +26,8 @@ const OptimizedYoutubeImage = ({ src, alt, className }: { src: string, alt: stri
 export default function YouTube() {
   // Default fallback values
   const [stats, setStats] = useState<{ subscribers: string; views: string }>({
-    subscribers: "447",
-    views: "264.0K"
+    subscribers: "493",
+    views: "300.9K"
   });
 
   useEffect(() => {

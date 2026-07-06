@@ -22,6 +22,11 @@ import Chatbot from './components/Chatbot';
 import ScrollProgress from './components/ScrollProgress';
 import BackToTop from './components/BackToTop';
 import SectionDots from './components/SectionDots';
+import Hub from './components/Hub';
+import FieldPage from './components/FieldPage';
+import AreaSwitcher from './components/AreaSwitcher';
+import Reveal from './components/Reveal';
+import { FIELDS } from './fields';
 
 // Lazy-loaded: heavy PDF/canvas libraries only load on these routes,
 // keeping the main bundle small and the home page fast.
@@ -114,6 +119,18 @@ export default function App() {
     );
   }
 
+  // Focused field landing pages
+  const field = FIELDS.find((f) => f.path === currentPath);
+  if (field) {
+    return <FieldPage field={field} />;
+  }
+
+  // Anything that isn't the full portfolio (#/all) or the tools modal (#/tools) => the hub chooser
+  if (currentPath !== '#/all' && currentPath !== '#/tools') {
+    return <Hub />;
+  }
+
+  // Full portfolio — everything on one page
   return (
     <div className="min-h-screen bg-zinc-950 text-zinc-50 font-sans selection:bg-neon-green/30 selection:text-neon-green">
       <ScrollProgress />
@@ -121,13 +138,15 @@ export default function App() {
       <Navbar />
       <main>
         {/* ---- High priority: who I am + what I do ---- */}
-        <Hero />
-        <Stats />
-        <About />
+        {/* Scroll-reveal (fade + slide-up) wrappers — animation only, no layout/style change */}
+        <Reveal><Hero /></Reveal>
+        <AreaSwitcher />
+        <Reveal><Stats /></Reveal>
+        <Reveal><About /></Reveal>
         <Stack />
         <AiTools />
         <Services />
-        <AppsWebsites />
+        <Reveal><AppsWebsites /></Reveal>
         <GraphicsVideo />
         <Automation />
         <ContentPlatforms />

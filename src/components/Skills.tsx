@@ -19,7 +19,8 @@ const softSkills = [
   { name: 'Adaptability', icon: Zap },
 ];
 
-export default function Skills() {
+export default function Skills({ only }: { only?: string[] } = {}) {
+  const techSkills = only ? technicalSkills.filter((s) => only.includes(s.name)) : technicalSkills;
   return (
     <section id="skills" className="py-24 bg-zinc-900/30">
       <div className="max-w-7xl mx-auto px-6">
@@ -44,7 +45,7 @@ export default function Skills() {
               Technical Skills
             </h3>
             <div className="flex flex-col gap-6">
-              {technicalSkills.map((skill, index) => (
+              {techSkills.map((skill, index) => (
                 <motion.div
                   key={skill.name}
                   initial={{ opacity: 0, x: -20 }}

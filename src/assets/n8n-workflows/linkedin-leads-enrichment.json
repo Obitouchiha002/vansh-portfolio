@@ -1,0 +1,81 @@
+{
+  "name": "LinkedIn Leads Scraping & Enrichment",
+  "desc": "Scrapes B2B leads from Apollo, then enriches each one with a verified email, a LinkedIn profile summary and a recap of their recent posts using AI — building a cold-outreach-ready leads database on its own.",
+  "tags": ["automation", "n8n", "lead-gen", "AI enrichment", "production"],
+  "nodes": [
+    { "name": "On form submission", "type": "n8n-nodes-base.formTrigger", "position": [0, 40] },
+    { "name": "Generate Leads with Apollo.io", "type": "n8n-nodes-base.httpRequest", "position": [220, 40] },
+    { "name": "Split Out", "type": "n8n-nodes-base.splitOut", "position": [440, 40] },
+    { "name": "Clean Data", "type": "n8n-nodes-base.set", "position": [660, 40] },
+    { "name": "Add Leads to Google Sheet", "type": "n8n-nodes-base.googleSheets", "position": [880, 40] },
+
+    { "name": "Google Sheets Trigger", "type": "n8n-nodes-base.googleSheetsTrigger", "position": [0, 260] },
+    { "name": "Get Pending Username Row", "type": "n8n-nodes-base.googleSheets", "position": [220, 260] },
+    { "name": "OpenAI · Extract Username", "type": "n8n-nodes-base.openAi", "position": [440, 260] },
+    { "name": "Add Linkedin Username", "type": "n8n-nodes-base.googleSheets", "position": [660, 260] },
+
+    { "name": "Google Sheets Trigger2", "type": "n8n-nodes-base.googleSheetsTrigger", "position": [0, 480] },
+    { "name": "Get Pending Email Statuses", "type": "n8n-nodes-base.googleSheets", "position": [220, 480] },
+    { "name": "Get Email from Apollo", "type": "n8n-nodes-base.httpRequest", "position": [440, 480] },
+    { "name": "Confirm Email Validity", "type": "n8n-nodes-base.httpRequest", "position": [660, 480] },
+    { "name": "If email is valid", "type": "n8n-nodes-base.if", "position": [880, 480] },
+    { "name": "Add Email Address", "type": "n8n-nodes-base.googleSheets", "position": [1100, 440] },
+    { "name": "Mark Invalid Email", "type": "n8n-nodes-base.googleSheets", "position": [1100, 540] },
+
+    { "name": "Google Sheets Trigger3", "type": "n8n-nodes-base.googleSheetsTrigger", "position": [0, 720] },
+    { "name": "Get Pending Profile Rows", "type": "n8n-nodes-base.googleSheets", "position": [220, 720] },
+    { "name": "Get About Profile", "type": "n8n-nodes-base.httpRequest", "position": [440, 720] },
+    { "name": "Clean Profile Data", "type": "n8n-nodes-base.code", "position": [660, 720] },
+    { "name": "AI Profile Summarizer", "type": "n8n-nodes-base.openAi", "position": [880, 720] },
+    { "name": "Update Profile Summary", "type": "n8n-nodes-base.googleSheets", "position": [1100, 720] },
+
+    { "name": "Google Sheets Trigger4", "type": "n8n-nodes-base.googleSheetsTrigger", "position": [0, 940] },
+    { "name": "Get Pending Posts Rows", "type": "n8n-nodes-base.googleSheets", "position": [220, 940] },
+    { "name": "Get Profile Posts", "type": "n8n-nodes-base.httpRequest", "position": [440, 940] },
+    { "name": "Clean Posts Data", "type": "n8n-nodes-base.code", "position": [660, 940] },
+    { "name": "Posts AI Summarizer", "type": "n8n-nodes-base.openAi", "position": [880, 940] },
+    { "name": "Update Posts Summary", "type": "n8n-nodes-base.googleSheets", "position": [1100, 940] },
+
+    { "name": "Google Sheets Trigger5", "type": "n8n-nodes-base.googleSheetsTrigger", "position": [0, 1160] },
+    { "name": "Get Completely Enriched Profiles", "type": "n8n-nodes-base.googleSheets", "position": [220, 1160] },
+    { "name": "Append to Enriched Leads Database", "type": "n8n-nodes-base.googleSheets", "position": [500, 1160] },
+
+    { "name": "Sticky1", "type": "n8n-nodes-base.stickyNote", "position": [-30, -30], "parameters": { "content": "## 1 · Scrape Leads from Apollo", "color": 4, "width": 1180, "height": 170 } },
+    { "name": "Sticky2", "type": "n8n-nodes-base.stickyNote", "position": [-30, 190], "parameters": { "content": "## 2 · Extract LinkedIn Username (AI)", "color": 3, "width": 960, "height": 170 } },
+    { "name": "Sticky3", "type": "n8n-nodes-base.stickyNote", "position": [-30, 410], "parameters": { "content": "## 3 · Get Email & Validate Deliverability", "color": 5, "width": 1400, "height": 210 } },
+    { "name": "Sticky4", "type": "n8n-nodes-base.stickyNote", "position": [-30, 670], "parameters": { "content": "## 4 · Profile Summary (RapidAPI + AI)", "color": 6, "width": 1400, "height": 170 } },
+    { "name": "Sticky5", "type": "n8n-nodes-base.stickyNote", "position": [-30, 890], "parameters": { "content": "## 5 · Summarize Latest Posts (RapidAPI + AI)", "color": 7, "width": 1400, "height": 170 } },
+    { "name": "Sticky6", "type": "n8n-nodes-base.stickyNote", "position": [-30, 1110], "parameters": { "content": "## 6 · Update Enriched Profile → Final Database", "color": 4, "width": 880, "height": 170 } }
+  ],
+  "connections": {
+    "On form submission": { "main": [[{ "node": "Generate Leads with Apollo.io", "type": "main", "index": 0 }]] },
+    "Generate Leads with Apollo.io": { "main": [[{ "node": "Split Out", "type": "main", "index": 0 }]] },
+    "Split Out": { "main": [[{ "node": "Clean Data", "type": "main", "index": 0 }]] },
+    "Clean Data": { "main": [[{ "node": "Add Leads to Google Sheet", "type": "main", "index": 0 }]] },
+
+    "Google Sheets Trigger": { "main": [[{ "node": "Get Pending Username Row", "type": "main", "index": 0 }]] },
+    "Get Pending Username Row": { "main": [[{ "node": "OpenAI · Extract Username", "type": "main", "index": 0 }]] },
+    "OpenAI · Extract Username": { "main": [[{ "node": "Add Linkedin Username", "type": "main", "index": 0 }]] },
+
+    "Google Sheets Trigger2": { "main": [[{ "node": "Get Pending Email Statuses", "type": "main", "index": 0 }]] },
+    "Get Pending Email Statuses": { "main": [[{ "node": "Get Email from Apollo", "type": "main", "index": 0 }]] },
+    "Get Email from Apollo": { "main": [[{ "node": "Confirm Email Validity", "type": "main", "index": 0 }]] },
+    "Confirm Email Validity": { "main": [[{ "node": "If email is valid", "type": "main", "index": 0 }]] },
+    "If email is valid": { "main": [[{ "node": "Add Email Address", "type": "main", "index": 0 }], [{ "node": "Mark Invalid Email", "type": "main", "index": 0 }]] },
+
+    "Google Sheets Trigger3": { "main": [[{ "node": "Get Pending Profile Rows", "type": "main", "index": 0 }]] },
+    "Get Pending Profile Rows": { "main": [[{ "node": "Get About Profile", "type": "main", "index": 0 }]] },
+    "Get About Profile": { "main": [[{ "node": "Clean Profile Data", "type": "main", "index": 0 }]] },
+    "Clean Profile Data": { "main": [[{ "node": "AI Profile Summarizer", "type": "main", "index": 0 }]] },
+    "AI Profile Summarizer": { "main": [[{ "node": "Update Profile Summary", "type": "main", "index": 0 }]] },
+
+    "Google Sheets Trigger4": { "main": [[{ "node": "Get Pending Posts Rows", "type": "main", "index": 0 }]] },
+    "Get Pending Posts Rows": { "main": [[{ "node": "Get Profile Posts", "type": "main", "index": 0 }]] },
+    "Get Profile Posts": { "main": [[{ "node": "Clean Posts Data", "type": "main", "index": 0 }]] },
+    "Clean Posts Data": { "main": [[{ "node": "Posts AI Summarizer", "type": "main", "index": 0 }]] },
+    "Posts AI Summarizer": { "main": [[{ "node": "Update Posts Summary", "type": "main", "index": 0 }]] },
+
+    "Google Sheets Trigger5": { "main": [[{ "node": "Get Completely Enriched Profiles", "type": "main", "index": 0 }]] },
+    "Get Completely Enriched Profiles": { "main": [[{ "node": "Append to Enriched Leads Database", "type": "main", "index": 0 }]] }
+  }
+}

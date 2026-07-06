@@ -44,6 +44,48 @@ type AppProject = ProjectDetails & { tech: string[]; featured?: string };
 
 const apps: AppProject[] = [
   {
+    title: 'Creator Tracker',
+    category: 'Web App',
+    image: '/creatortracker-thumbnail.svg',
+    description: 'Track YouTube creators, auto-scan their videos and let AI surface viral ideas, winning keywords and fresh topics.',
+    link: 'https://tracker.grivaacapital.com/',
+    tech: ['React', 'YouTube API', 'AI'],
+    details: {
+      imageOrientation: 'landscape',
+      images: [
+        '/app-shots/creatortracker-d1.png',
+        '/app-shots/creatortracker-d2.png',
+        '/app-shots/creatortracker-d4.png',
+        '/app-shots/creatortracker-d3.png',
+      ],
+      tools: ['React', 'YouTube API', 'AI', 'Tailwind CSS'],
+      problem: 'Creators struggle to track competitors, spot what is going viral and decide what to make next.',
+      solution: 'Built an AI-powered tracker that scans any set of YouTube channels, compares viral vs flop, finds winning keywords and generates fresh video ideas per niche — with scheduled auto-runs and email/Sheet export.',
+      result: 'A single dashboard that turns competitor research into a ready-to-shoot content plan.',
+    },
+  },
+  {
+    title: 'Vedic Astra',
+    category: 'Web App',
+    image: '/vedicastra-thumbnail.svg',
+    description: 'AI-powered Vedic astrology — precise birth charts, dashas, divisional charts and AI interpretations.',
+    link: 'https://vedicastra.vercel.app/',
+    tech: ['React', 'Tailwind CSS', 'AI'],
+    details: {
+      imageOrientation: 'landscape',
+      images: [
+        '/app-shots/vedicastra-d1.png',
+        '/app-shots/vedicastra-d2.png',
+        '/app-shots/vedicastra-d3.png',
+        '/app-shots/vedicastra-d4.png',
+      ],
+      tools: ['React', 'Tailwind CSS', 'Astro Engine', 'AI'],
+      problem: 'Accurate Vedic charts and interpretations are hard to get without expensive consultations.',
+      solution: 'Built a tool that generates precise birth charts using Swiss Ephemeris calculations — Lagna, dashas and divisional charts — with clean AI-driven interpretations for career, wealth and relationships.',
+      result: 'Instant, shareable astrology dashboards backed by real astronomical math.',
+    },
+  },
+  {
     title: 'VanshLink',
     category: 'App',
     image: '/vanshlink-thumbnail.svg',

@@ -1,6 +1,6 @@
 import { motion } from 'motion/react';
 import { useState } from 'react';
-import { Workflow, Video, Zap, ArrowUpRight } from 'lucide-react';
+import { Workflow, Video, Zap, ArrowUpRight, Sparkles } from 'lucide-react';
 import AiToolModal, { AiTool } from './AiToolModal';
 
 /* =========================================================================
@@ -193,8 +193,24 @@ const aiTools: AiTool[] = [
   },
 ];
 
+/* Small logo/icon tile reused across card variants. */
+function ToolLogo({ tool, size = 'w-14 h-14' }: { tool: AiTool; size?: string }) {
+  const Icon = tool.icon;
+  return (
+    <div className={`${size} rounded-xl bg-white flex items-center justify-center p-2.5 shadow-lg transition-transform duration-300 group-hover:scale-110`}>
+      {tool.logo ? (
+        <img src={tool.logo} alt={`${tool.name} logo`} loading="lazy" className="w-full h-full object-contain" />
+      ) : (
+        <Icon size={26} className="text-zinc-900" />
+      )}
+    </div>
+  );
+}
+
 export default function AiTools() {
   const [selected, setSelected] = useState<AiTool | null>(null);
+  const featured = aiTools.filter((t) => t.dailyDriver);
+  const rest = aiTools.filter((t) => !t.dailyDriver);
 
   return (
     <section id="ai-tools" className="py-24 relative overflow-hidden">
@@ -206,8 +222,12 @@ export default function AiTools() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="flex flex-col gap-4 mb-16"
+          className="flex flex-col gap-4 mb-12"
         >
+          <div className="inline-flex items-center gap-2 text-neon-green">
+            <Sparkles size={20} />
+            <span className="text-xs font-mono uppercase tracking-[0.2em]">My AI Stack</span>
+          </div>
           <h2 className="text-3xl md:text-5xl font-display font-bold">
             AI Tools I <span className="text-neon-green">Work With</span>
           </h2>
@@ -218,51 +238,80 @@ export default function AiTools() {
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {aiTools.map((tool, index) => {
-            const Icon = tool.icon;
-            return (
-              <motion.button
-                key={tool.name}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.08 }}
-                whileHover={{ y: -6 }}
-                whileTap={{ scale: 0.98 }}
-                onClick={() => setSelected(tool)}
-                style={{ ['--glow' as string]: tool.glow }}
-                className={`group relative text-left bg-zinc-900/60 border border-zinc-800 rounded-2xl p-6 backdrop-blur-sm transition-all duration-300 ${tool.ring} hover:shadow-[0_0_30px_rgba(var(--glow),0.18)]`}
-              >
-                {/* Daily Driver badge */}
-                {tool.dailyDriver && (
-                  <div className="absolute top-4 right-4 inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-neon-green/10 border border-neon-green/30 text-neon-green text-[10px] font-bold uppercase tracking-wider">
-                    <Zap size={11} />
-                    Daily Driver
-                  </div>
-                )}
-
-                {/* Logo / icon tile */}
-                <div className="w-14 h-14 rounded-xl bg-white flex items-center justify-center p-2.5 mb-5 shadow-lg transition-transform duration-300 group-hover:scale-110">
-                  {tool.logo ? (
-                    <img src={tool.logo} alt={`${tool.name} logo`} loading="lazy" className="w-full h-full object-contain" />
-                  ) : (
-                    <Icon size={26} className="text-zinc-900" />
-                  )}
+        {/* Featured daily drivers */}
+        <p className="text-xs font-mono uppercase tracking-[0.2em] text-zinc-500 mb-5 flex items-center gap-2">
+          <Zap size={13} className="text-neon-green" /> Daily drivers
+        </p>
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-14">
+          {featured.map((tool, index) => (
+            <motion.button
+              key={tool.name}
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
+              whileHover={{ y: -6 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={() => setSelected(tool)}
+              style={{ ['--glow' as string]: tool.glow }}
+              className={`group relative text-left rounded-3xl p-7 backdrop-blur-sm transition-all duration-300 bg-gradient-to-b from-zinc-900/80 to-zinc-950 border border-zinc-800 ${tool.ring} hover:shadow-[0_0_45px_-10px_rgba(var(--glow),0.5)]`}
+            >
+              <div
+                className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
+                style={{ background: `radial-gradient(120% 80% at 50% 0%, rgba(${tool.glow},0.10), transparent 70%)` }}
+              />
+              <div className="relative">
+                <div className="flex items-start justify-between mb-5">
+                  <ToolLogo tool={tool} size="w-16 h-16" />
+                  <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-neon-green/10 border border-neon-green/30 text-neon-green text-[10px] font-bold uppercase tracking-wider">
+                    <Zap size={11} /> Daily Driver
+                  </span>
                 </div>
-
-                <h3 className="text-xl font-display font-bold text-zinc-100 mb-2 flex items-center gap-1.5">
+                <h3 className="text-2xl font-display font-bold text-zinc-100 mb-2 flex items-center gap-1.5">
                   {tool.name}
-                  <ArrowUpRight size={16} className="text-zinc-600 group-hover:text-zinc-300 transition-colors" />
+                  <ArrowUpRight size={18} className="text-zinc-600 group-hover:text-zinc-200 transition-colors" />
                 </h3>
                 <p className="text-zinc-400 text-sm leading-relaxed mb-5">{tool.useCase}</p>
+                <div className="flex items-center gap-2">
+                  <span className={`text-xs font-mono px-3 py-1 rounded-full bg-zinc-800/80 border border-zinc-700/60 ${tool.accent}`}>
+                    {tool.level}
+                  </span>
+                  <span className="text-xs text-zinc-500">View details →</span>
+                </div>
+              </div>
+            </motion.button>
+          ))}
+        </div>
 
-                <span className={`inline-block text-xs font-mono px-3 py-1 rounded-full bg-zinc-800/80 border border-zinc-700/60 ${tool.accent}`}>
-                  {tool.proficiency}
-                </span>
-              </motion.button>
-            );
-          })}
+        {/* Rest of the stack */}
+        <p className="text-xs font-mono uppercase tracking-[0.2em] text-zinc-500 mb-5 flex items-center gap-2">
+          <Sparkles size={13} className="text-zinc-400" /> Also in my toolkit
+        </p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          {rest.map((tool, index) => (
+            <motion.button
+              key={tool.name}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.45, delay: index * 0.06 }}
+              whileHover={{ y: -5 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={() => setSelected(tool)}
+              style={{ ['--glow' as string]: tool.glow }}
+              className={`group relative text-left bg-zinc-900/60 border border-zinc-800 rounded-2xl p-5 backdrop-blur-sm transition-all duration-300 ${tool.ring} hover:shadow-[0_0_30px_rgba(var(--glow),0.18)]`}
+            >
+              <ToolLogo tool={tool} size="w-12 h-12" />
+              <h3 className="text-lg font-display font-bold text-zinc-100 mt-4 mb-1.5 flex items-center gap-1.5">
+                {tool.name}
+                <ArrowUpRight size={15} className="text-zinc-600 group-hover:text-zinc-300 transition-colors" />
+              </h3>
+              <p className="text-zinc-400 text-xs leading-relaxed mb-4">{tool.useCase}</p>
+              <span className={`inline-block text-[11px] font-mono px-2.5 py-1 rounded-full bg-zinc-800/80 border border-zinc-700/60 ${tool.accent}`}>
+                {tool.proficiency}
+              </span>
+            </motion.button>
+          ))}
         </div>
       </div>
 

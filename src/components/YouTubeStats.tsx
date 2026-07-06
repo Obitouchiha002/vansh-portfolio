@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 
 export default function YouTubeStats() {
-  // Default fallback values (447 subscribers, 264.0K views)
+  // Default fallback values (used until the live API responds / on local dev)
   const [stats, setStats] = useState({
-    subscribers: "447",
-    views: "264.0K"
+    subscribers: "493",
+    views: "300.9K"
   });
 
   useEffect(() => {

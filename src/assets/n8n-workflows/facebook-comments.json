@@ -1,0 +1,32 @@
+{
+  "name": "Get Comments from Facebook Page",
+  "desc": "Pulls the latest posts from a Facebook Page, fetches every comment on each post, then merges, filters and structures them into a clean, ready-to-use dataset.",
+  "tags": ["automation", "n8n", "facebook", "social", "lead-gen"],
+  "nodes": [
+    { "name": "When clicking 'Test workflow'", "type": "n8n-nodes-base.manualTrigger", "position": [0, 40] },
+    { "name": "Set PageID & Latest Posts", "type": "n8n-nodes-base.set", "position": [220, 40] },
+    { "name": "Facebook · Get Posts from Page", "type": "n8n-nodes-base.facebookGraphApi", "position": [440, 40] },
+    { "name": "Split Out Posts", "type": "n8n-nodes-base.splitOut", "position": [660, 40] },
+    { "name": "Facebook · Get Each Post Comments", "type": "n8n-nodes-base.facebookGraphApi", "position": [880, 40] },
+    { "name": "Reverse to Match Branch", "type": "n8n-nodes-base.code", "position": [1100, 40] },
+    { "name": "Merge Post & Comments", "type": "n8n-nodes-base.merge", "position": [1320, 40] },
+
+    { "name": "Filter Out Null Comments", "type": "n8n-nodes-base.filter", "position": [440, 240] },
+    { "name": "Split Out Comments", "type": "n8n-nodes-base.splitOut", "position": [660, 240] },
+    { "name": "Select Result Field", "type": "n8n-nodes-base.set", "position": [880, 240] },
+
+    { "name": "Sticky1", "type": "n8n-nodes-base.stickyNote", "position": [-30, -20], "parameters": { "content": "## 1 · Fetch Posts & Comments (Facebook Graph API)", "color": 4, "width": 1560, "height": 160 } },
+    { "name": "Sticky2", "type": "n8n-nodes-base.stickyNote", "position": [-30, 200], "parameters": { "content": "## 2 · Clean, Merge & Structure Output", "color": 5, "width": 1120, "height": 160 } }
+  ],
+  "connections": {
+    "When clicking 'Test workflow'": { "main": [[{ "node": "Set PageID & Latest Posts", "type": "main", "index": 0 }]] },
+    "Set PageID & Latest Posts": { "main": [[{ "node": "Facebook · Get Posts from Page", "type": "main", "index": 0 }]] },
+    "Facebook · Get Posts from Page": { "main": [[{ "node": "Split Out Posts", "type": "main", "index": 0 }]] },
+    "Split Out Posts": { "main": [[{ "node": "Facebook · Get Each Post Comments", "type": "main", "index": 0 }, { "node": "Reverse to Match Branch", "type": "main", "index": 0 }]] },
+    "Facebook · Get Each Post Comments": { "main": [[{ "node": "Merge Post & Comments", "type": "main", "index": 0 }]] },
+    "Reverse to Match Branch": { "main": [[{ "node": "Merge Post & Comments", "type": "main", "index": 1 }]] },
+    "Merge Post & Comments": { "main": [[{ "node": "Filter Out Null Comments", "type": "main", "index": 0 }]] },
+    "Filter Out Null Comments": { "main": [[{ "node": "Split Out Comments", "type": "main", "index": 0 }]] },
+    "Split Out Comments": { "main": [[{ "node": "Select Result Field", "type": "main", "index": 0 }]] }
+  }
+}

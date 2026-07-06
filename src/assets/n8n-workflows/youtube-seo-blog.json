@@ -1,0 +1,30 @@
+{
+  "name": "Convert YouTube Videos into SEO Blog Posts",
+  "desc": "Takes any YouTube link, grabs its transcript, then uses GPT-4o to write a full SEO-optimized blog post and a matching cover image — formats it to HTML and emails the finished post to you.",
+  "tags": ["automation", "n8n", "AI", "content", "SEO"],
+  "nodes": [
+    { "name": "When clicking 'Test workflow'", "type": "n8n-nodes-base.manualTrigger", "position": [0, 40] },
+    { "name": "Set Variables", "type": "n8n-nodes-base.set", "position": [220, 40] },
+    { "name": "Get YouTube Transcript", "type": "n8n-nodes-base.httpRequest", "position": [440, 40] },
+
+    { "name": "Generate Blog Post (GPT-4o)", "type": "n8n-nodes-base.openAi", "position": [0, 240] },
+    { "name": "Generate AI Image (FLUX)", "type": "n8n-nodes-base.httpRequest", "position": [220, 240] },
+    { "name": "Download Image", "type": "n8n-nodes-base.httpRequest", "position": [440, 240] },
+
+    { "name": "Markdown → HTML", "type": "n8n-nodes-base.markdown", "position": [0, 440] },
+    { "name": "Send Blog via Gmail", "type": "n8n-nodes-base.gmail", "position": [220, 440] },
+
+    { "name": "Sticky1", "type": "n8n-nodes-base.stickyNote", "position": [-30, -20], "parameters": { "content": "## 1 · Get Video Transcript (Dumpling AI)", "color": 5, "width": 760, "height": 160 } },
+    { "name": "Sticky2", "type": "n8n-nodes-base.stickyNote", "position": [-30, 200], "parameters": { "content": "## 2 · Generate SEO Blog + Image (AI)", "color": 3, "width": 760, "height": 160 } },
+    { "name": "Sticky3", "type": "n8n-nodes-base.stickyNote", "position": [-30, 420], "parameters": { "content": "## 3 · Format & Email the Post", "color": 6, "width": 540, "height": 160 } }
+  ],
+  "connections": {
+    "When clicking 'Test workflow'": { "main": [[{ "node": "Set Variables", "type": "main", "index": 0 }]] },
+    "Set Variables": { "main": [[{ "node": "Get YouTube Transcript", "type": "main", "index": 0 }]] },
+    "Get YouTube Transcript": { "main": [[{ "node": "Generate Blog Post (GPT-4o)", "type": "main", "index": 0 }]] },
+    "Generate Blog Post (GPT-4o)": { "main": [[{ "node": "Generate AI Image (FLUX)", "type": "main", "index": 0 }]] },
+    "Generate AI Image (FLUX)": { "main": [[{ "node": "Download Image", "type": "main", "index": 0 }]] },
+    "Download Image": { "main": [[{ "node": "Markdown → HTML", "type": "main", "index": 0 }]] },
+    "Markdown → HTML": { "main": [[{ "node": "Send Blog via Gmail", "type": "main", "index": 0 }]] }
+  }
+}
