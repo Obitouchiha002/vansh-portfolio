@@ -1,40 +1,41 @@
-# Vansh Kashyap — Portfolio
+# vanshkashyap.lzworth.in
 
-Personal portfolio of **Vansh Kashyap** — AI-powered creator, automation builder, and graphic & video designer from Delhi, India.
+Source for my portfolio — **[vanshkashyap.lzworth.in](https://vanshkashyap.lzworth.in)**
 
-🔗 **Live:** [techbyvansh.vercel.app](https://techbyvansh.vercel.app/)
-📺 **YouTube:** [Tech By Vansh](https://youtube.com/@techbyvansh)
+A static site with no framework and no build step: plain HTML, CSS and vanilla
+JavaScript. Content lives in one `content.js` file as a `window.DATA` global, so
+the whole site can be opened from the filesystem without a server.
 
-## Features
+## What's in it
 
-- AI Tools showcase with per-tool detail dashboards
-- Apps & Websites, Graphics & AI Video gallery, and Automation workflows
-- Services section, animated stats, and an AI chatbot assistant
-- Built-in utility tools (PDF/image tools, resume maker) and a resume viewer
-- PWA support, responsive design, smooth animations
+- 11 live web apps and 6 Android apps, each one openable
+- Deep-dive write-ups on the products worth explaining
+- A [photo page](https://vanshkashyap.lzworth.in/photos) and
+  [résumé](https://vanshkashyap.lzworth.in/resume.pdf)
 
-## Tech Stack
+## How it's built
 
-React 19 · Vite 6 · TypeScript · Tailwind CSS 4 · Motion · Express
+| | |
+|---|---|
+| **Markup** | Hand-written HTML, one file per page |
+| **Content** | `assets/content.js` — a single source of truth, no CMS |
+| **Behaviour** | `assets/app.js` — small defensive IIFE modules; each no-ops if its markup is absent |
+| **Styling** | CSS custom properties, dark-first with a light theme |
+| **Images** | AVIF → WebP → JPEG via `<picture>`, with explicit dimensions to prevent layout shift |
+| **Mobile** | An app-mode tab bar that swaps sections instead of scrolling |
+| **Structured data** | JSON-LD: Person, Organization, WebSite, BreadcrumbList, FAQPage, SoftwareApplication |
+| **Hosting** | Vercel — clean URLs, immutable asset caching, IndexNow on deploy |
 
-## Run Locally
+No React, no bundler, no node_modules. The whole thing is files.
 
-**Prerequisites:** Node.js
+## Licence
 
-1. Install dependencies:
-   ```bash
-   npm install
-   ```
-2. Copy `.env.example` to `.env.local` and fill in your keys
-   (`GEMINI_API_KEY` for the chatbot, `YOUTUBE_API_KEY` for live stats).
-3. Start the dev server:
-   ```bash
-   npm run dev
-   ```
+Proprietary — All Rights Reserved. Published for portfolio and demonstration
+purposes only. See [LICENSE](LICENSE).
 
-## Scripts
+---
 
-- `npm run dev` — start the dev server
-- `npm run build` — production build
-- `npm start` — run the built server
-- `npm run lint` — type-check with `tsc`
+Built by **Vansh Kashyap** — full-stack and AI automation developer in New Delhi,
+India. Co-founder of [LZ Worth](https://lzworth.in).
+
+[Portfolio](https://vanshkashyap.lzworth.in) · [DEV](https://dev.to/techbyvansh) · [Peerlist](https://peerlist.io/techbyvansh) · [LinkedIn](https://www.linkedin.com/in/techbyvansh)
